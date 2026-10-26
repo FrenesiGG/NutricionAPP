@@ -1,0 +1,10 @@
+# Normaliza los finales de línea en el repositorio (LF) para que el sitio
+# se vea igual sin importar el sistema desde el que se edite.
+* text=auto eol=lf
+
+*.svg  text
+*.js   text
+*.css  text
+*.html text
+*.md   text
+*.py   text
