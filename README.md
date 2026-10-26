@@ -7,7 +7,7 @@ Es un sitio **100 % estático**: HTML + CSS + JavaScript sin frameworks, sin
 dependencias, sin CDN y **sin paso de compilación**. Por eso funciona igual al
 abrir `index.html` con doble clic que servido desde GitHub Pages.
 
-**Sitio publicado:** https://TU-USUARIO.github.io/NutricionAPPv1.8/
+**Sitio publicado:** https://frenesigg.github.io/NutricionAPPv1.8/
 
 ---
 
@@ -84,7 +84,7 @@ El sitio se sirve directamente desde la rama `main`, carpeta raíz:
 
 1. Ajustes del repositorio → **Pages**.
 2. *Source*: **Deploy from a branch** → rama `main`, carpeta `/ (root)`.
-3. La URL queda como `https://USUARIO.github.io/NutricionAPPv1.8/`.
+3. La URL queda como `https://frenesigg.github.io/NutricionAPPv1.8/`.
 
 El archivo `.nojekyll` evita que GitHub procese el sitio con Jekyll, así que los
 nombres de archivo y carpetas se sirven tal cual.
