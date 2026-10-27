@@ -4,10 +4,10 @@
 (function () {
   'use strict';
 
-  var VERSION = '1.4';
+  var VERSION = '2.1';
 
   function blank() {
-    return { version: VERSION, metab: [], comidas: [], prefs: { card: 132 } };
+    return { version: VERSION, metab: [], comidas: [], prefs: { card: 132, db: 'main' } };
   }
 
   // Estado puramente en memoria

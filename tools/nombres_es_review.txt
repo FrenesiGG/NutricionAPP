@@ -1,0 +1,537 @@
+EN: Carbonated beverage, chocolate-flavored soda
+ES: Bebida carbonatada, refresco con sabor a chocolate
+
+EN: Beverages, Chocolate-flavored drink, whey and milk based
+ES: Bebida con sabor a chocolate, a base de suero y leche
+
+EN: Beverages, chocolate drink, milk and soy based, ready to drink, fortified
+ES: Bebida de chocolate, a base de leche y soya, listas para beber, fortificadas
+
+EN: Beverages, coffee, instant, regular, powder
+ES: Bebidas, café, instantáneo, regular, en polvo
+
+EN: Beverages, coffee, instant, regular, prepared with water
+ES: Bebidas, café, instantáneo, regular, preparado con agua
+
+EN: Beverages, chocolate powder, no sugar added
+ES: Bebidas, chocolate en polvo, sin azúcar añadido
+
+EN: Beverages, rich chocolate, powder
+ES: Bebidas, chocolate intenso, polvo
+
+EN: Beverages, chocolate syrup
+ES: Bebidas, jarabe de chocolate
+
+EN: Beverages, chocolate syrup, prepared with whole milk
+ES: Bebidas, jarabe de chocolate, preparado con leche entera
+
+EN: Beverages, chocolate almond milk, unsweetened, shelf-stable, fortified with vitamin D2 and E
+ES: Bebidas, leche de almendras con chocolate, sin azúcar, no perecederas, fortificadas con vitamina D2 y E
+
+EN: Beverages, almond milk, chocolate, ready-to-drink
+ES: Bebidas, leche de almendras, chocolate, listas para beber
+
+EN: Beverages, chocolate malt powder, prepared with 1% milk, fortified
+ES: Bebidas, malta de chocolate en polvo, preparadas con leche al 1%, enriquecidas
+
+EN: Beverages, chocolate-flavor beverage mix for milk, powder, with added nutrients
+ES: Bebidas, mezcla de bebidas con sabor a chocolate para leche, en polvo, con nutrientes añadidos
+
+EN: Beverages, dairy drink mix, chocolate, reduced calorie, with aspartame, powder, prepared with water and ice
+ES: Bebidas, mezcla de bebidas lácteas, chocolate, reducida en calorías, con aspartamo, en polvo, preparada con agua y hielo
+
+EN: Beverages, Dairy drink mix, chocolate, reduced calorie, with low-calorie sweeteners, powder
+ES: Bebidas, mezcla de bebidas lácteas, chocolate, reducida en calorías, con edulcorantes bajos en calorías, en polvo
+
+EN: Beverages, chocolate-flavor beverage mix, powder, prepared with whole milk
+ES: Bebidas, mezcla para bebidas con sabor a chocolate, en polvo, preparada con leche entera
+
+EN: Beverages, malted drink mix, chocolate, powder
+ES: Bebidas, mezclas de bebidas malteadas, chocolate, polvo
+
+EN: Beverages, tea, green, brewed, regular
+ES: Bebidas, té, verde, elaborado, regular
+
+EN: Alcoholic beverage, beer, regular, all
+ES: Bebida alcohólica, cerveza, regular, todas las clases
+
+EN: Granola bar, soft, milk chocolate coated, peanut butter
+ES: Barra de granola, suave, recubierta de chocolate con leche, mantequilla de maní
+
+EN: Snack, Pretzel, hard chocolate coated
+ES: Botana, Pretzel, recubierto de chocolate duro
+
+EN: Snacks, granola bar, with coconut, chocolate coated
+ES: Botanas, barra de granola, con coco, recubierta de chocolate
+
+EN: Snacks, trail mix, regular
+ES: Botanas, mezcla de frutos secos, regular
+
+EN: Snacks, trail mix, regular, with chocolate chips, salted nuts and seeds
+ES: Botanas, mezcla de frutos secos, regular, con chispas de chocolate, nueces y semillas saladas
+
+EN: Snacks, popcorn, microwave, regular (butter) flavor, made with partially hydrogenated oil
+ES: Botanas, palomitas de maíz, microondas, sabor regular (mantequilla), elaborados con aceite parcialmente hidrogenado
+
+EN: Snacks, popcorn, oil-popped, microwave, regular flavor, no trans fat
+ES: Botanas, palomitas de maíz, preparadas con aceite, para microondas, sabor regular, sin grasas trans
+
+EN: Popcorn, microwave, regular (butter) flavor, made with palm oil
+ES: Palomitas de maíz, para microondas, sabor regular (mantequilla), hechas con aceite de palma
+
+EN: Pork, cured, ham, center slice, country-style, separable lean only, raw
+ES: Cerdo, curado, jamón, loncha central, estilo campestre, solo magro separable, crudo
+
+EN: Pork, cured, shoulder, arm picnic, separable lean only, roasted
+ES: Cerdo, curado, paleta, brazo picnic, solo magro separable, asado
+
+EN: Pork, fresh, shoulder, (Boston butt), blade (steaks), separable lean only, raw
+ES: Cerdo, fresco, paleta (boston butt), lomo (filetes), solo magro separable, crudo
+
+EN: Pork, fresh, shoulder, arm picnic, separable lean only, cooked, braised
+ES: Cerdo, fresco, paleta, brazo picnic, solo magro separable, cocinado, estofado
+
+EN: Pork, fresh, shoulder, arm picnic, separable lean only, raw
+ES: Cerdo, fresco, paleta, brazo picnic, solo magro separable, crudo
+
+EN: Pork, fresh, shoulder, whole, separable lean only, cooked, roasted
+ES: Cerdo, fresco, paleta, entera, solo magro separable, cocido, asado
+
+EN: Pork, fresh, shoulder, whole, separable lean only, raw
+ES: Cerdo, fresco, paleta, entera, solo magro separable, crudo
+
+EN: Pork, fresh, shoulder, blade, boston (roasts), separable lean only, cooked, roasted
+ES: Cerdo, fresco, paleta, lomo, Boston (asados), solo magro separable, cocido, asado
+
+EN: Pork, fresh, leg (ham), whole, separable lean only, cooked, roasted
+ES: Cerdo, fresco, pierna (jamón), entera, solo magro separable, cocido, asado
+
+EN: Pork, fresh, leg (ham), whole, separable lean only, raw
+ES: Cerdo, fresco, pierna (jamón), entero, solo magro separable, crudo
+
+EN: Pork, fresh, leg (ham), rump half, separable lean only, cooked, roasted
+ES: Cerdo, fresco, pierna (jamón), mitad de lomo, solo magro separable, cocido, asado
+
+EN: Pork, fresh, leg (ham), shank half, separable lean only, cooked, roasted
+ES: Cerdo, fresco, pierna (jamón), mitad de pierna, solo magro separable, cocido, asado
+
+EN: Pork, fresh, leg (ham), shank half, separable lean only, raw
+ES: Cerdo, fresco, pierna (jamón), mitad de pierna, solo magro separable, crudo
+
+EN: Beef, shoulder pot roast or steak, boneless, separable lean only, trimmed to 0" fat, choice, raw
+ES: Carne de res, carne asada o filete, sin hueso, solo magro separable, recortado a 0" de grasa, calidad Choice, crudo
+
+EN: Beef, shank crosscuts, separable lean only, trimmed to 1/4" fat, choice, cooked, simmered
+ES: Carne de res, cortes transversales de pierna, solo magro separable, recortado a 1/4" de grasa, calidad Choice, cocinado, hervido a fuego lento
+
+EN: Beef, shank crosscuts, separable lean only, trimmed to 1/4" fat, choice, raw
+ES: Carne de res, cortes transversales de pierna, solo magro separable, recortado a 1/4" de grasa, calidad Choice, crudo
+
+EN: Beef, rib, eye, small end (ribs 10- 12) separable lean only, trimmed to 0" fat, select, cooked, broiled
+ES: Carne de res, costilla, ojo, extremo pequeño (costillas 10-12), solo magro separable, recortado a 0" de grasa, calidad Select, cocido, a la parrilla
+
+EN: Beef, rib, back ribs, bone-in, separable lean only, trimmed to 0" fat, choice, cooked, braised
+ES: Carne de res, costillas, costillas, con hueso, solo magro separable, recortado a 0" de grasa, calidad Choice, cocinado, estofado
+
+EN: Beef, rib, back ribs, bone-in, separable lean only, trimmed to 0" fat, choice, raw
+ES: Carne de res, costillas, costillas, con hueso, solo magro separable, recortado a 0" de grasa, calidad Choice, crudo
+
+EN: Beef, rib, shortribs, separable lean only, choice, cooked, braised
+ES: Carne de res, costillas, costillas, solo magro separable, calidad Choice, cocido, estofado
+
+EN: Beef, rib, shortribs, separable lean only, choice, raw
+ES: Carne de res, costillas, costillas, solo magro separable, calidad Choice, crudo
+
+EN: Beef, rib, large end (ribs 6-9), separable lean only, trimmed to 0" fat, select, cooked, roasted
+ES: Carne de res, costillas, extremo grande (costillas 6-9), solo magro separable, recortado a 0" de grasa, calidad Select, cocido, asado
+
+EN: Beef, rib, small end (ribs 10-12), separable lean only, trimmed to 0" fat, choice, cooked, broiled
+ES: Carne de res, costillas, extremo pequeño (costillas 10-12), solo magro separable, recortado a 0" de grasa, calidad Choice, cocido, a la parrilla
+
+EN: Beef, rib eye, small end (ribs 10-12), separable lean only, trimmed to 0" fat, select, raw
+ES: Carne de res, costillas, extremo pequeño (costillas 10-12), solo magro separable, recortado a 0" de grasa, calidad Select, crudo
+
+EN: Beef, rib, small end (ribs 10-12), separable lean only, trimmed to 1/8" fat, select, raw
+ES: Carne de res, costillas, extremo pequeño (costillas 10-12), solo magro separable, recortado a 1/8" de grasa, calidad Select, crudo
+
+EN: Beef, brisket, whole, separable lean only, trimmed to 0" fat, all grades, cooked, braised
+ES: Carne de res, falda, entera, solo magro separable, recortado a 0" de grasa, todos los grados, cocinado, estofado
+
+EN: Beef, brisket, whole, separable lean only, all grades, raw
+ES: Carne de res, falda, entera, solo magro separable, todos los grados, cruda
+
+EN: Beef, brisket, flat half, separable lean only, trimmed to 0" fat, select, cooked, braised
+ES: Carne de res, falda, mitad plana, solo magro separable, recortado a 0" de grasa, calidad Select, cocido, estofado
+
+EN: Beef, brisket, flat half, separable lean only, trimmed to 1/8" fat, choice, raw
+ES: Carne de res, falda, mitad plana, solo magro separable, recortado a 1/8" de grasa, calidad Choice, crudo
+
+EN: Beef, brisket, point half, separable lean only, trimmed to 0" fat, all grades, cooked, braised
+ES: Carne de res, falda, punto mitad, solo magro separable, recortado a 0" de grasa, todos los grados, cocinado, estofado
+
+EN: Beef, plate steak, boneless, inside skirt, separable lean only, trimmed to 0" fat, choice, raw
+ES: Carne de res, filete al plato, sin hueso, falda interior, solo magro separable, recortado a 0" de grasa, calidad Choice, crudo
+
+EN: Beef, shoulder top blade steak, boneless, separable lean only, trimmed to 0" fat, select, raw
+ES: Carne de res, filete de paleta, sin hueso, solo magro separable, recortado a 0" de grasa, calidad Select, crudo
+
+EN: Beef, shoulder pot roast, boneless, separable lean only, trimmed to 0" fat, choice, cooked, braised
+ES: Carne de res, lomo asado, sin hueso, solo magro separable, recortado a 0" de grasa, calidad Choice, cocinado, estofado
+
+EN: Beef, loin, top loin steak, boneless, lip-on, separable lean only, trimmed to 1/8" fat, choice, raw
+ES: Carne de res, lomo, filete de lomo superior, sin hueso, con labio, solo magro separable, recortado a 1/8" de grasa, calidad Choice, crudo
+
+EN: Beef, loin, tenderloin roast, separable lean only, boneless, trimmed to 0" fat, select, cooked, roasted
+ES: Carne de res, lomo, lomo asado, solo magro separable, sin hueso, recortado a 0" de grasa, calidad Select, cocido, asado
+
+EN: Beef, round, eye of round roast, boneless, separable lean only, trimmed to 0" fat, select, raw
+ES: Carne de res, lomo, ojo de lomo asado, sin hueso, solo magro separable, recortado a 0" de grasa, calidad Select, crudo
+
+EN: Beef, shoulder steak, boneless, separable lean only, trimmed to 0" fat, choice, cooked, grilled
+ES: Carne de res, lomo, sin hueso, solo magro separable, recortado a 0" de grasa, calidad Choice, cocinado, a la parrilla
+
+EN: Beef, plate, outside skirt steak, separable lean only, trimmed to 0" fat, all grades, cooked, broiled
+ES: Carne de res, plato, filete de falda exterior, solo magro separable, recortado a 0" de grasa, todos los grados, cocinado, a la parrilla
+
+EN: Beef, plate, inside skirt steak, separable lean only, trimmed to 0" fat, all grades, cooked, broiled
+ES: Carne de res, plato, filete de falda interior, solo magro separable, recortado a 0" de grasa, todos los grados, cocinado, a la parrilla
+
+EN: Beef, bottom sirloin, tri-tip roast, separable lean only, trimmed to 0" fat, choice, cooked, roasted
+ES: Carne de res, solomillo inferior, tri-tip, solo magro separable, recortado a 0" de grasa, calidad Choice, cocido, asado
+
+EN: Beef, bottom sirloin, tri-tip roast, separable lean only, trimmed to 0" fat, select, raw
+ES: Carne de res, solomillo inferior, tri-tip, solo magro separable, recortado a 0" de grasa, calidad Select, crudo
+
+EN: Cereals, whole wheat hot natural cereal, cooked with water, with salt
+ES: Cereales, cereal integral caliente natural, cocido con agua, con sal
+
+EN: Cereals, corn grits, white, regular and quick, enriched, dry
+ES: Cereales, sémola de maíz, blanca, regular y rápida, enriquecida, seca
+
+EN: Pasta, homemade, made with egg, cooked
+ES: Pasta, casera, hecha con huevo, cocida
+
+EN: Pasta, cooked, unenriched, with added salt
+ES: Pasta, cocida, sin enriquecer, con sal añadida
+
+EN: Pasta, fresh-refrigerated, spinach, cooked
+ES: Pasta, fresca refrigerada, espinacas, cocida
+
+EN: Pasta, fresh-refrigerated, plain, cooked
+ES: Pasta, fresca refrigerada, natural, cocida
+
+EN: Pasta, fresh-refrigerated, spinach, as purchased
+ES: Pasta, fresca, refrigerada, espinacas, tal como se compró
+
+EN: Pasta, fresh-refrigerated, plain, as purchased
+ES: Pasta, fresca, refrigerada, natural, tal como se compró
+
+EN: Pasta, dry, whole grain, spaghetti 
+ES: Pasta, seca, integral, espagueti
+
+EN: Pasta, dry, unenriched
+ES: Pasta, seca, sin enriquecer
+
+EN: Pasta, gluten-free, corn, cooked
+ES: Pasta, sin gluten, maíz, cocida
+
+EN: Lamb, Australian, imported, fresh, loin, separable lean only, trimmed to 1/8" fat, raw
+ES: Cordero, australiano, importado, fresco, lomo, solo magro separable, recortado a 1/8" de grasa, crudo
+
+EN: Lamb, cubed for stew or kabob (leg and shoulder), separable lean only, trimmed to 1/4" fat, raw
+ES: Cordero, cortado en cubitos para estofado o brocheta (pierna y paleta), solo magro separable, recortado a 1/4" de grasa, crudo
+
+EN: Lamb, rib, separable lean only, trimmed to 1/4" fat, choice, cooked, broiled
+ES: Cordero, costilla, solo magro separable, recortado a 1/4" de grasa, calidad Choice, cocido, a la parrilla
+
+EN: Lamb, rib, separable lean only, trimmed to 1/4" fat, choice, raw
+ES: Cordero, costilla, solo magro separable, recortado a 1/4" de grasa, calidad Choice, crudo
+
+EN: Lamb, loin, separable lean only, trimmed to 1/4" fat, choice, cooked, broiled
+ES: Cordero, lomo, solo magro separable, recortado a 1/4" de grasa, calidad Choice, cocido, a la parrilla
+
+EN: Lamb, loin, separable lean only, trimmed to 1/4" fat, choice, raw
+ES: Cordero, lomo, solo magro separable, recortado a 1/4" de grasa, calidad Choice, crudo
+
+EN: Lamb, shoulder, arm, separable lean only, trimmed to 1/4" fat, choice, raw
+ES: Cordero, paleta, brazo, solo magro separable, recortado a 1/4" de grasa, calidad Choice, crudo
+
+EN: Lamb, shoulder, blade, separable lean only, trimmed to 1/4" fat, choice, raw
+ES: Cordero, paleta, cuchilla, solo magro separable, recortado a 1/4" de grasa, calidad Choice, crudo
+
+EN: Lamb, shoulder, whole (arm and blade), separable lean only, trimmed to 1/4" fat, choice, raw
+ES: Cordero, paleta, entera (brazo y cuchilla), solo magro separable, recortado a 1/4" de grasa, calidad Choice, crudo
+
+EN: Lamb, leg, whole (shank and sirloin), separable lean only, trimmed to 1/4" fat, choice, raw
+ES: Cordero, pierna, entera (pierna y solomillo), solo magro separable, recortado a 1/4" de grasa, calidad Choice, crudo
+
+EN: Lamb, leg, shank half, separable lean only, trimmed to 1/4" fat, choice, raw
+ES: Cordero, pierna, mitad de pierna, solo magro separable, recortado a 1/4" de grasa, calidad Choice, crudo
+
+EN: Lamb, leg, sirloin half, separable lean only, trimmed to 1/4" fat, choice, raw
+ES: Cordero, pierna, mitad de solomillo, solo magro separable, recortado a 1/4" de grasa, calidad Choice, crudo
+
+EN: Lamb, foreshank, separable lean only, trimmed to 1/4" fat, choice, raw
+ES: Cordero, pierna, solo magro separable, recortado a 1/4" de grasa, calidad Choice, crudo
+
+EN: Veal, Australian, rib, rib roast, separable lean only, raw
+ES: Ternera, australiana, costilla, costilla asada, solo magro separable, crudo
+
+EN: Veal, Australian, shank, hind, bone-in, separable lean only, raw
+ES: Ternera, australiana, pierna, trasera, con hueso, solo magro separable, crudo
+
+EN: Veal, foreshank, osso buco, separable lean only, cooked, braised
+ES: Ternera, brazuelo, oso buco, solo magro separable, cocido, estofado
+
+EN: Veal, cubed for stew (leg and shoulder), separable lean only, cooked, braised
+ES: Ternera, cortada en cubitos para guiso (pierna y paleta), solo magro separable, cocida, estofada
+
+EN: Veal, cubed for stew (leg and shoulder), separable lean only, raw
+ES: Ternera, cortada en cubitos para guiso (pierna y paleta), solo magro separable, cruda
+
+EN: Veal, rib, separable lean only, cooked, braised
+ES: Ternera, costilla, solo magro separable, cocida, estofada
+
+EN: Veal, rib, separable lean only, raw
+ES: Ternera, costilla, solo magro separable, cruda
+
+EN: Veal, loin, chop, separable lean only, cooked, grilled
+ES: Ternera, lomo, chuleta, solo magro separable, cocido, a la parrilla
+
+EN: Veal, loin, separable lean only, cooked, braised
+ES: Ternera, lomo, solo magro separable, cocido, estofado
+
+EN: Veal, loin, separable lean only, raw
+ES: Ternera, lomo, solo magro separable, crudo
+
+EN: Veal, shoulder, arm, separable lean only, cooked, braised
+ES: Ternera, paleta, brazo, solo magro separable, cocido, estofado
+
+EN: Veal, shoulder, arm, separable lean only, raw
+ES: Ternera, paleta, brazo, solo magro separable, crudo
+
+EN: Veal, shoulder, blade chop, separable lean only, raw
+ES: Ternera, paleta, chuleta, solo magro separable, cruda
+
+EN: Veal, shoulder, whole (arm and blade), separable lean only, raw
+ES: Ternera, paleta, entera (brazo y corte), solo magro separable, cruda
+
+EN: Veal, shoulder, whole (arm and blade), separable lean only, cooked, braised
+ES: Ternera, paleta, entera (brazo y cuchilla), solo magro separable, cocida, estofada
+
+EN: Veal, shoulder, blade, separable lean only, cooked, braised
+ES: Ternera, paleta, omóplato, solo magro separable, cocido, estofado
+
+EN: Veal, breast, whole, boneless, separable lean only, cooked, braised
+ES: Ternera, pechuga, entera, sin hueso, solo magro separable, cocido, estofado
+
+EN: Veal, shank (fore and hind), separable lean only, cooked, braised
+ES: Ternera, pierna (anterior y trasera), solo magro separable, cocida, estofada
+
+EN: Veal, leg (top round), separable lean only, cooked, roasted
+ES: Ternera, pierna (redondo superior), solo magro separable, cocido, asado
+
+EN: Veal, leg (top round), separable lean only, cooked, pan-fried, breaded
+ES: Ternera, pierna (ronda superior), solo magro separable, cocido, frito, empanizado
+
+EN: Veal, leg (top round), separable lean only, raw
+ES: Ternera, pierna (ronda superior), solo magro separable, cruda
+
+EN: Veal, shank, separable lean only, raw
+ES: Ternera, pierna, solo magro separable, cruda
+
+EN: Veal, sirloin, separable lean only, cooked, braised
+ES: Ternera, solomillo, solo magro separable, cocido, estofado
+
+EN: Veal, sirloin, separable lean only, raw
+ES: Ternera, solomillo, solo magro separable, crudo
+
+EN: Puddings, chocolate, ready-to-eat
+ES: Budines, chocolate, listos para comer
+
+EN: Puddings, all flavors except chocolate, low calorie, regular, dry mix
+ES: Budines, todos los sabores excepto chocolate, bajos en calorías, mezcla normal y seca
+
+EN: Candies, coconut bar, not chocolate covered
+ES: Caramelos, barra de coco, no cubiertos de chocolate
+
+EN: Candies, white chocolate
+ES: Caramelos, chocolate blanco
+
+EN: Candies, milk chocolate
+ES: Caramelos, chocolate con leche
+
+EN: Candies, sweet chocolate
+ES: Caramelos, chocolate dulce
+
+EN: Candies, semisweet chocolate
+ES: Caramelos, chocolate semidulce
+
+EN: Candies, chocolate covered, caramel with nuts
+ES: Caramelos, cubiertos de chocolate, caramelo con nueces
+
+EN: Candies, fudge, chocolate, prepared-from-recipe
+ES: Caramelos, dulce de azúcar, chocolate, preparado a partir de receta
+
+EN: Candies, dark chocolate coated coffee beans
+ES: Caramelos, granos de café recubiertos de chocolate negro
+
+EN: Candies, caramels, chocolate-flavor roll
+ES: Caramelos, rollo sabor chocolate
+
+EN: Baking chocolate, mexican, squares
+ES: Chocolate para hornear, mexicano, cuadritos
+
+EN: Baking chocolate, unsweetened, liquid
+ES: Chocolate para hornear, sin azúcar, líquido
+
+EN: Chocolate-flavored hazelnut spread
+ES: Crema de avellanas con sabor a chocolate
+
+EN: Puddings, chocolate, dry mix, regular
+ES: Flanes, chocolate, mezcla seca, regular
+
+EN: Puddings, chocolate, dry mix, regular, prepared with 2% milk
+ES: Flanes, chocolate, mezcla seca, regular, preparado con leche al 2%
+
+EN: Puddings, coconut cream, dry mix, regular
+ES: Flanes, crema de coco, mezcla seca, regular
+
+EN: Puddings, coconut cream, dry mix, regular, prepared with 2% milk
+ES: Flanes, crema de coco, mezcla seca, regular, preparados con leche al 2%
+
+EN: Frostings, chocolate, creamy, ready-to-eat
+ES: Glaseados, chocolate, cremosos, listos para comer
+
+EN: Frostings, chocolate, creamy, dry mix, prepared with butter
+ES: Glaseados, chocolate, mezcla cremosa y seca, preparados con mantequilla
+
+EN: Ice creams, chocolate
+ES: Helados, chocolate
+
+EN: Milk dessert, frozen, milk-fat free, chocolate
+ES: Postre de leche, congelado, sin grasa láctea, chocolate
+
+EN: Desserts, rennin, chocolate, dry mix
+ES: Postres, cuajo, chocolate, mezcla seca
+
+EN: Desserts, mousse, chocolate, prepared-from-recipe
+ES: Postres, mousse, chocolate, preparados a partir de receta
+
+EN: Puddings, chocolate flavor, low calorie, regular, dry mix
+ES: Pudines, sabor chocolate, bajos en calorías, mezcla regular y seca
+
+EN: Pudding, lemon, dry mix, regular, prepared with sugar, egg yolk and water
+ES: Pudín, limón, mezcla seca, regular, preparado con azúcar, yema de huevo y agua
+
+EN: Rennin, chocolate, dry mix, prepared with 2% milk
+ES: Renina, chocolate, mezcla seca, preparada con leche al 2%
+
+EN: Syrups, chocolate, fudge-type
+ES: Siropes, chocolate, tipo dulce de azúcar
+
+EN: Frozen yogurts, chocolate
+ES: Yogures helados, chocolate
+
+EN: Frozen yogurts, chocolate, nonfat milk, sweetened without sugar
+ES: Yogures helados, chocolate, leche descremada, endulzados sin azúcar
+
+EN: Frozen yogurts, chocolate, soft-serve
+ES: Yogures helados, chocolate, servido suave
+
+EN: Frozen yogurts, flavors other than chocolate
+ES: Yogures helados, sabores distintos del chocolate
+
+EN: Nuts, almond paste
+ES: Nueces, pasta de almendras
+
+EN: Seeds, sesame butter, paste
+ES: Semillas, mantequilla de sésamo, pasta
+
+EN: Salad dressing, Italian dressing, commercial, regular
+ES: Aderezo para ensaladas, aderezo italiano, comercial, regular
+
+EN: Tofu, raw, regular, prepared with calcium sulfate
+ES: Tofu, crudo, regular, preparado con sulfato de calcio
+
+EN: Ice cream cone, chocolate covered, with nuts, flavors other than chocolate
+ES: Cono de helado, cubierto de chocolate, con nueces, sabores distintos del chocolate
+
+EN: Fat free ice cream, no sugar added, flavors other than chocolate
+ES: Helado sin grasa, sin azúcar añadido, sabores distintos al chocolate
+
+EN: Ice cream, lowfat, no sugar added, cone, added peanuts and chocolate sauce
+ES: Helado, bajo en grasa, sin azúcar añadido, cono, maní añadido y salsa de chocolate
+
+EN: Ice cream, bar or stick, chocolate covered
+ES: Helado, barra o palito, cubierto de chocolate
+
+EN: Ice cream, light, soft serve, chocolate
+ES: Helado, ligero, suave, chocolate
+
+EN: Ice cream, soft serve, chocolate
+ES: Helado, servido suave, chocolate
+
+EN: Milk, chocolate beverage, hot cocoa, homemade
+ES: Leche, bebida de chocolate, chocolate caliente, casera
+
+EN: Milk, chocolate, lowfat, with added vitamin A and vitamin D
+ES: Leche, chocolate, bajo en grasa, con vitamina A y vitamina D añadidas
+
+EN: Milk, chocolate, fluid, commercial, reduced fat, with added calcium
+ES: Leche, chocolate, líquida, comercial, reducida en grasa, con calcio añadido
+
+EN: Milk, chocolate, fat free, with added vitamin A and vitamin D
+ES: Leche, chocolate, sin grasa, con vitamina A y vitamina D añadidas
+
+EN: Milk, dry, nonfat, regular, with added vitamin A and vitamin D
+ES: Leche, en polvo, sin grasa, regular, con vitamina A y vitamina D añadidas
+
+EN: Yogurt, chocolate, nonfat milk
+ES: Yogur, chocolate, leche descremada
+
+EN: Yogurt, frozen, flavors other than chocolate, lowfat
+ES: Yogur, congelado, sabores distintos del chocolate, bajo en grasa
+
+EN: Yogurt, frozen, flavors not chocolate, nonfat milk, with low-calorie sweetener
+ES: Yogur, congelado, sin sabores a chocolate, leche descremada, con edulcorante bajo en calorías
+
+EN: Cookie, chocolate, with icing or coating
+ES: Galleta, chocolate, con glaseado o cobertura
+
+EN: Cake, chocolate, commercially prepared with chocolate frosting, in-store bakery
+ES: Pastel de chocolate, preparado comercialmente con glaseado de chocolate, panadería en tienda
+
+EN: Pie, chocolate creme, commercially prepared
+ES: Pastel, crema de chocolate, preparado comercialmente
+
+EN: Cake, cherry fudge with chocolate frosting
+ES: Pastel, dulce de cerezas con glaseado de chocolate
+
+EN: Pasta mix, classic beef, unprepared
+ES: Mezcla de pasta, carne clásica, sin preparar
+
+EN: Pasta mix, Italian lasagna, unprepared
+ES: Mezcla de pasta, lasaña italiana, sin preparar
+
+EN: Pasta with Sliced Franks in Tomato Sauce, canned entree
+ES: Pasta con salchichas en rodajas en salsa de tomate, plato principal enlatado
+
+EN: Pasta with tomato sauce, no meat, canned
+ES: Pasta con salsa de tomate, sin carne, enlatada
+
+EN: Tortellini, pasta with cheese filling, fresh-refrigerated, as purchased
+ES: Tortellini, pasta con relleno de queso, frescos refrigerados, tal como se compraron
+
+EN: Sauce, pasta, spaghetti/marinara, ready-to-serve
+ES: Salsa, pasta, espagueti/marinara, lista para servir
+
+EN: Spinach, canned, regular pack, drained solids
+ES: Espinacas, en lata, paquete regular, sólidos escurridos
+
+EN: Beans, snap, green, canned, regular pack, drained solids
+ES: Frijoles, verdes, en lata, paquete regular, sólidos escurridos
+
+EN: Tomato, paste, canned, without salt added
+ES: Tomate, pasta, en lata, sin sal añadida
+

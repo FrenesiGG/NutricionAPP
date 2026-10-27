@@ -1,6 +1,100 @@
 # Changelog
 
 Todas las versiones de NutricionAPP. Se empieza en 1.0 y cada entrega suma +0.1.
+## [2.1] — 2026-10-26
+
+La burbuja de cada nutriente del **Desglose nutrimental completo** ahora explica el **riesgo por déficit** y el **riesgo por exceso**, cada uno con su fuente. Se añadieron tres UL que faltaban y se ajustó la burbuja para que quepa en pantalla.
+
+### Desglose nutrimental
+
+- Al pasar el cursor por cualquier nutriente (barras y filas sin meta) la burbuja muestra dos secciones nuevas:
+  - **Riesgo por déficit:** consecuencias documentadas de una ingesta insuficiente.
+  - **Riesgo por exceso:** consecuencias de superar la dosis o el UL; si el nutriente no tiene UL oficial, se indica expresamente.
+- Cada riesgo incluye su propia cita (`Fuente: …`). Se usan únicamente organismos de referencia: **NASEM/IOM (DRI)**, **OMS/FAO/UNU**, **EFSA**, **ACSM**, **Endocrine Society** y **NIH Office of Dietary Supplements**.
+- Se cubren los 63 nutrientes numéricos de las secciones 1–5. Cuando no existe síndrome carencial (p. ej. cenizas, relación ω-6/ω-3, licopeno, luteína) o no hay UL oficial (p. ej. tiamina, riboflavina, B12, vitamina K, potasio), se dice claramente en lugar de inventar un riesgo o una cifra.
+- Casos destacados: el β-caroteno distingue el riesgo de **suplementos** en fumadores (ATBC/CARET) del consumo en alimentos; el EPA/DHA cita el límite de **5 g/día** de la EFSA; los fitosteroles citan los **1.5–3 g/día** de la EFSA; el magnesio aclara que su UL aplica solo a suplementos.
+
+### Límites y referencias
+
+- Nuevos UL informativos:
+  - **Retinol** (vitamina A preformada): 3,000 µg/día (IOM).
+  - **Molibdeno:** 2,000 µg/día (IOM).
+  - **Magnesio:** 350 mg/día solo para suplementos y medicamentos (`noAutoStatus`), porque el magnesio de los alimentos no se asocia a efectos adversos con función renal normal.
+- La burbuja ahora mide 340 px, tiene estilos propios para los riesgos (azul = déficit, ámbar = exceso) y se reposiciona para no salirse de la ventana cuando es más alta.
+
+### Otros
+
+- Versión `2.1` en `data/alimentos.js`, `data/alimentos_ext.js`, `Store.version`, el respaldo de `DBX`, `AGENTS.md` y `?v=2.1` de `index.html`.
+- Los generadores `tools/build_main.py`, `tools/build_ext.py` y `tools/translate_ext.py` también escriben `meta.version = "2.1"`, para que una regeneración no baje la versión.
+- Las bases no cambian de contenido: siguen siendo 120 alimentos principales y 1,719 extendidos, 76 columnas.
+- Se corrigió la codificación del separador `·` en el `<title>` y en el pie de la barra lateral, que se mostraban como «Â·».
+
+## [2.0] — 2026-10-26
+
+Corrección de tres referencias nutricionales (niacina, flúor y colesterol) y traducción al español de los 1,719 alimentos de la base ampliada, conservando la descripción original de USDA.
+
+### Límites y referencias
+
+- **Niacina (B3):** el UL de 35 mg/día ahora se presenta como referencia exclusiva de la **niacina sintética de suplementos y alimentos fortificados**. La niacina natural de carnes, pescados y cereales integrales no se asocia a rubefacción ni hepatotoxicidad, así que la barra ya no se colorea ni genera alertas por este UL (`noAutoStatus`). La RDA de 16 mg (hombres) y 14 mg (mujeres) se mantiene como mínimo.
+- **Flúor (corregido):** el UL estaba en `10` con unidad `mg`, pero la base guarda el flúor en **µg**, por lo que el límite efectivo era de 10 µg (mil veces menor). Ahora es `10,000 µg = 10 mg/día` y la burbuja muestra «10 mg/día (10,000 µg)». Se añade la nota de que la **EFSA** fija un UL más estricto de 5 mg/día.
+- **Colesterol dietético:** se retiró el «máximo seguro» de 300 mg/día. No existe un UL oficial: las guías **2015–2020** eliminaron el tope numérico y las **2025–2030** ya no fijan una cifra, sino que recomiendan limitar las grasas saturadas a menos del 10 % de las kcal. La app ya no asigna referencia máxima ni alerta por colesterol; la burbuja explica la ausencia de UL y aclara que **<200 mg/día** es solo una referencia clínica para prevención cardiovascular de alto riesgo, no un UL poblacional.
+
+### Base ampliada
+
+- Los **1,719 nombres** de `data/alimentos_ext.js` están ahora en **español** (columna «Alimento» del catálogo y la tabla).
+- La descripción original de USDA se conserva en `nombre_en` («Nombre en inglés (USDA)») y sigue disponible en la ficha, la búsqueda y la tabla.
+- La traducción se genera con `tools/translate_ext.py` y se guarda en `tools/nombres_es.json`; el build (`tools/build_ext.py`) la aplica desde esa caché, por lo que **no necesita internet**. `tools/nombres_es_review.txt` lista los casos dudosos y el script incluye correcciones manuales.
+
+### Otros
+
+- Versión `2.0` en `data/alimentos.js`, `data/alimentos_ext.js`, `Store.version`, `AGENTS.md` y `?v=2.0` de `index.html`.
+- La base principal no cambia de contenido: mismas 120 filas y 76 columnas, solo actualiza metadatos.
+
+## [1.9] — 2026-10-26
+
+Actualización con nombre inglés USDA, vista tabular del catálogo, base extendida, rangos AMDR interactivos, escala logarítmica/lineal en las proyecciones de peso y resúmenes visuales por sección.
+
+### Base de datos
+
+- Nueva columna `nombre_en` («Nombre en inglés (USDA)») en las 120 filas de la base principal; se muestra en la ficha del alimento debajo del nombre en español.
+- Nuevos alimentos con icono propio:
+  - **Sal de mesa yodada** (`IMG-47`, USDA Foundation Foods 746775): 5,080 µg de yodo y 38,700 mg de sodio por 100 g.
+  - **Leche deslactosada semidescremada** (`IMG-49`, USDA Foundation Foods 746778): 50 kcal y 126 mg de calcio por 100 ml.
+- Se sustituyeron 68 alimentos con equivalente claro en **USDA Foundation Foods 2026-04-30**, más reciente y fiable que SR Legacy 2018. Cuando Foundation no reporta un nutriente se conserva el valor de SR Legacy para no perder datos; las 120 filas tienen kcal.
+- Nueva base extendida `data/alimentos_ext.js` (`window.DB_EXT`): **1,719 alimentos USDA curados** (SR Legacy 2018 + Foundation 2026-04-30), 23 categorías y 76 columnas. Se excluyen marcas, alimentos infantiles, de restaurante y poco comunes.
+- 23 iconos genéricos por categoría en `iconos/categorias/` para los alimentos extendidos.
+- Selector **Principal / Ampliada** en el catálogo (tarjetas y tabla), en la calculadora de comida y en cualquier galería que use la base; por defecto se muestra solo la base principal. La preferencia vive en `Store.prefs.db`.
+
+### Catálogo
+
+- Nueva pestaña **Tabla** con todos los datos de la base activa:
+  - Orden A-Z/Z-A por cualquier columna.
+  - Reordenar columnas arrastrando el encabezado.
+  - Redimensionar columnas arrastrando el borde.
+  - Mostrar/ocultar columnas y restaurar todas.
+  - Control de tamaño de letra (9–20 px).
+  - Desplazamiento horizontal y encabezado fijo; paginación de 25/50/100/200 filas.
+- La pestaña **Tarjetas** conserva búsqueda, filtros por categoría, tamaño de tarjeta y ficha completa; ahora busca también por nombre inglés y muestra el nombre inglés en la ficha.
+- La galería carga las tarjetas por lotes («Mostrar más») para que la base ampliada no bloquee la interfaz.
+
+### Calculadora de metas
+
+- **Distribución de Macronutrientes** se movió justo debajo de «Datos de la persona».
+- Al pasar el cursor por cada macro de la dona se muestra una burbuja con el porcentaje actual y los rangos AMDR de **IOM/NASEM** y **WHO/FAO**, además del estado (dentro/fuera).
+- La gráfica de proyección de peso tiene un selector **Log / Lineal** para el eje X.
+- La burbuja de la gráfica muestra el punto exacto: peso, semana, mes y TDEE del día simulado.
+
+### Calculadora de comida
+
+- **Desglose nutrimental completo**: el encabezado de cada sección muestra un resumen visual con cuántos nutrientes cumplen, faltan, están cerca o exceden la meta o el UL; la sección 6 (bioactivos) se marca como cualitativa.
+- La comparación conserva la proyección de peso con el selector de escala y la burbuja de punto exacto.
+- La dona de macros también muestra los rangos AMDR al pasar el cursor.
+
+### Otros
+
+- `?v=1.9` en CSS y scripts para evitar caché antigua.
+- Nuevos generadores reproducibles en `tools/`: `usda.py`, `build_main.py`, `build_ext.py` y `make_icons.py`.
+
 ## [1.8] - 2026-10-25
 
 - Se eliminó la burbuja que aparecía sobre el punto al pasar el cursor por la gráfica de proyección de peso; los valores exactos siguen en las etiquetas de los ejes (kg, semana y mes).

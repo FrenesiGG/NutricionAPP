@@ -135,6 +135,11 @@
           '</div>' +
           '<p class="note mt-14" id="mb-error" style="color:#f6a09a"></p>' +
         '</div>' +
+        '<div class="card mb-14" id="mb-macro-card">' +
+          '<div class="card-title"><h2>Distribución de Macronutrientes</h2>' +
+            '<span class="hint">Pasa el cursor para ver los rangos AMDR</span></div>' +
+          '<div id="mb-macro-chart"></div>' +
+        '</div>' +
         '</div>' +
 
         '<div class="result-panel">' +
@@ -161,9 +166,6 @@
             '<div class="target-explanation" id="mb-target-explanation"></div>' +
             '<p class="note mt-14">Se usan como referencia en la calculadora de comida ' +
               'para mostrar qué porcentaje cubres.</p>' +
-          '</div>' +
-          '<div class="card"><div class="card-title"><h2>Distribución de Macronutrientes</h2><span class="hint">Meta calórica diaria</span></div>' +
-            '<div id="mb-macro-chart"></div>' +
           '</div>' +
         '</div>' +
       '</div>' +
@@ -308,6 +310,7 @@
       U.$('#mb-actf', root).textContent = '—';
       U.$('#mb-targets', root).innerHTML = '';
       U.$('#mb-target-explanation', root).innerHTML = '';
+      U.$('#mb-macro-chart', root).innerHTML = '';
       U.$('#mb-nota', root).textContent = '';
       U.$('#mb-weight-chart', root).innerHTML = '<div class="card-title"><h2>Proyección de peso</h2></div><p class="note">Introduce datos válidos para ver la proyección.</p>';
       return;
@@ -334,6 +337,7 @@
     }
     U.$('#mb-nota', root).textContent = nota;
     U.$('#mb-macro-chart', root).innerHTML = macroTargetChart(refs, res.meta);
+    U.bindMacroPie(U.$('#mb-macro-chart', root));
     renderWeightChart(res);
 
     var tiles = [

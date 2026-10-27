@@ -14,6 +14,7 @@
   var current = null;
   var els = {};
   var catalog = null;
+  var table = null;
 
   /* ---------------------------------------------------------------- catálogo */
 
@@ -23,19 +24,45 @@
       '<div class="page-head">' +
         '<div>' +
           '<h1>Catálogo de alimentos</h1>' +
-          '<p>' + DB.meta.filas + ' alimentos · ' + DB.meta.columnas + ' columnas · ' +
-            DB.categorias.length + ' categorías. Toca un alimento para ver su ficha completa.</p>' +
+          '<p id="cat-sub">' + U.n(DBX.count(), 0) + ' alimentos · ' + DBX.cols().length + ' columnas · ' +
+            DBX.categorias().length + ' categorías. Toca un alimento para ver su ficha completa.</p>' +
         '</div>' +
         '<div class="head-actions">' +
-          '<span class="badge green">' + U.icon('leaf', 13) + '<span>Base mexicana</span></span>' +
+          '<span class="badge green">' + U.icon('leaf', 13) + '<span>Base mexicana + USDA</span></span>' +
         '</div>' +
       '</div>' +
-      '<div id="cat-gallery"></div>';
+      '<div class="catalog-tabs seg" role="tablist" aria-label="Vista del catálogo">' +
+        '<button type="button" data-cat-view="cards" class="is-on">Tarjetas</button>' +
+        '<button type="button" data-cat-view="table">Tabla completa</button>' +
+      '</div>' +
+      '<div id="cat-cards"></div>' +
+      '<div id="cat-table" class="hidden"></div>';
 
-    catalog = Gallery.create(U.$('#cat-gallery', host), {
+    catalog = Gallery.create(U.$('#cat-cards', host), {
       card: (Store.prefs && Store.prefs.card) || 132,
       onOpen: function (food) { App.food(food.id); }
     });
+    table = DBTable.create(U.$('#cat-table', host));
+
+    U.$$('[data-cat-view]', host).forEach(function (b) {
+      b.onclick = function () {
+        var view = b.getAttribute('data-cat-view');
+        U.$$('[data-cat-view]', host).forEach(function (x) {
+          x.classList.toggle('is-on', x === b);
+        });
+        U.$('#cat-cards', host).classList.toggle('hidden', view !== 'cards');
+        U.$('#cat-table', host).classList.toggle('hidden', view !== 'table');
+        if (view === 'table') table.refresh();
+      };
+    });
+  }
+
+  function paintCatalogHead() {
+    var sub = U.$('#cat-sub');
+    if (sub) {
+      sub.textContent = U.n(DBX.count(), 0) + ' alimentos · ' + DBX.cols().length + ' columnas · ' +
+        DBX.categorias().length + ' categorías. Toca un alimento para ver su ficha completa.';
+    }
   }
 
   /* -------------------------------------------------------------- navegación */
@@ -83,9 +110,12 @@
 
   function paintMeta() {
     if (els.dbInfo) {
-      els.dbInfo.textContent = DB.meta.filas + ' alimentos · ' + DB.meta.columnas + ' col.';
-      els.dbInfo.title = DB.meta.fuente + ' · generado ' + DB.meta.generado;
+      var meta = DBX.meta();
+      els.dbInfo.textContent = U.n(DBX.foods().length, 0) + ' alimentos · ' + DBX.cols().length + ' col.';
+      els.dbInfo.title = (DBX.mode() === 'extended' ? 'Base ampliada · ' : 'Base principal · ') +
+        (meta.fuente || '') + ' · generado ' + (meta.generado || '');
     }
+    paintCatalogHead();
     if (els.storeState) {
       var n = Store.metab.length + Store.comidas.length;
       if (!n) {
@@ -242,6 +272,7 @@
 
     paintMeta();
     Store.subscribe(paintMeta);
+    DBX.subscribe(paintMeta);
 
     go('catalogo');
 

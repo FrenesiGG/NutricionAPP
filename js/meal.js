@@ -27,7 +27,15 @@
   /* ------------------------------------------------------------ utilidades */
 
   function foodOf(id) {
-    return window.Gallery ? Gallery.byId(id) : null;
+    var f = window.Gallery ? Gallery.byId(id) : null;
+    if (f) return f;
+    /* Un alimento de la base ampliada sigue contando aunque luego se vuelva a la principal. */
+    if (window.DB_EXT) {
+      for (var i = 0; i < DB_EXT.alimentos.length; i++) {
+        if (DB_EXT.alimentos[i].id === id) return DB_EXT.alimentos[i];
+      }
+    }
+    return null;
   }
 
   function col(k) { return COLBY[k] || null; }
@@ -512,7 +520,7 @@
 
   /* ------------------------------------------------------------- paso 3 */
 
-  var mealWpState = { mode: 'initial', zero: true, manualKcal: 0, manualPct: 0 };
+  var mealWpState = { mode: 'initial', zero: true, manualKcal: 0, manualPct: 0, scale: 'log' };
 
   function renderResult() {
     var items = includedItems();
@@ -590,9 +598,10 @@
       breakdown(tot, refs, userMeta, items) +
       '</div>';
 
-    html += '<p class="note mb-8">Haz clic en cualquier nutriente para ver qué alimentos lo aportan. Pasa el cursor para ver explicación detallada, fuentes oficiales y límite máximo seguro (UL). Los totales marcados con * indican que algún alimento no reporta ese nutriente.</p>';
+    html += '<p class="note mb-8">Haz clic en cualquier nutriente para ver qué alimentos lo aportan. Pasa el cursor para ver la explicación, la fuente oficial, el <b>riesgo por déficit</b>, el <b>riesgo por exceso</b> y el límite máximo seguro (UL) cuando existe. Los totales marcados con * indican que algún alimento no reporta ese nutriente.</p>';
 
     els.body.innerHTML = html;
+    U.bindMacroPie(els.body);
     if (metab) {
       var wh = U.$('#ml-weight-chart', els.body);
       U.weightProjection(wh, {
@@ -863,6 +872,42 @@
   }
 
   /* Requisito 6: Desglose completo de las 6 secciones en la misma burbuja/tarjeta, sin repetir filas */
+  function sectionPills(cols, tot, refs, userMeta) {
+    var counts = { ok: 0, low: 0, close: 0, over: 0, none: 0 };
+    var weight = userMeta ? (+userMeta.peso || 70) : 70;
+    var kcal = userMeta ? (+userMeta.meta || +userMeta.tdee || 2000) : 2000;
+
+    cols.forEach(function (c) {
+      var r = refs ? refs[c.k] : null;
+      if (!r) { counts.none += 1; return; }
+      var v = tot.v[c.k] || 0;
+      var pct = U.pct(v, r.v);
+      var st = N.status(pct, r.tipo);
+      var ul = N.getUlStatus(c.k, v, weight, kcal);
+      if (ul.status === 'danger') counts.over += 1;
+      else if (ul.status === 'warn') counts.close += 1;
+      else if (st === 'over') counts.over += 1;
+      else if (st === 'warn') counts.close += 1;
+      else if (st === 'low') counts.low += 1;
+      else counts.ok += 1;
+    });
+
+    var defs = [
+      ['ok', '✓', 'en rango', 'Cumplen la meta o están dentro del límite máximo'],
+      ['low', '↓', 'faltan', 'Por debajo del 50 % de la meta diaria'],
+      ['close', '~', 'cerca', 'Entre 50 y 99 % de la meta, o cerca del límite máximo (UL)'],
+      ['over', '!', 'exceden', 'Superan la meta máxima o el límite máximo tolerable (UL)'],
+      ['none', '—', 'sin meta', 'La app no tiene una referencia diaria para estos nutrientes']
+    ];
+    var html = '<span class="s-pills">';
+    defs.forEach(function (d) {
+      if (!counts[d[0]]) return;
+      html += '<span class="spill ' + d[0] + '" title="' + d[3] + '">' + d[1] + ' ' + counts[d[0]] + ' ' + d[2] + '</span>';
+    });
+    html += '</span>';
+    return html;
+  }
+
   function breakdown(tot, refs, userMeta, items) {
     var used = {};
     var html = '';
@@ -876,7 +921,7 @@
     ];
 
     sections.forEach(function (s) {
-      var cols = DB.cols.filter(function (c) { return c.sec === s.sec && c.tipo === 'num'; });
+      var cols = DBX.cols().filter(function (c) { return c.sec === s.sec && c.tipo === 'num'; });
       if (!cols.length) return;
 
       var withRef = [], without = [];
@@ -893,7 +938,9 @@
       }
 
       html += '<details class="section"' + (s.open ? ' open' : '') + '>' +
-        '<summary>' + s.t + '<span class="s-count">' + cols.length + ' nutrientes</span></summary>';
+        '<summary><span class="s-title">' + s.t + '</span>' +
+        sectionPills(cols, tot, refs, userMeta) +
+        '<span class="s-count">' + cols.length + ' nutrientes</span></summary>';
 
       if (withRef.length) {
         html += '<div class="bars">';
@@ -932,7 +979,9 @@
     /* Sección 6: Bioactivos y textos cualitativos */
     var bioHtml = bioactive(items);
     html += '<details class="section">' +
-      '<summary>6. Compuestos bioactivos y texto nutricional<span class="s-count">Antioxidantes y fitoquímicos</span></summary>' +
+      '<summary><span class="s-title">6. Compuestos bioactivos y texto nutricional</span>' +
+      '<span class="s-pills"><span class="spill qual" title="Sección cualitativa: describe antioxidantes y fitoquímicos, sin metas numéricas">Cualitativo</span></span>' +
+      '<span class="s-count">Antioxidantes y fitoquímicos</span></summary>' +
       (bioHtml || '<p class="note" style="padding:8px 0">No se detectaron notas de compuestos bioactivos adicionales en los alimentos seleccionados.</p>') +
       '</details>';
 
@@ -1008,6 +1057,27 @@
             ' % del límite tolerable. ' + U.esc(info.ulRisk) + '</div>';
         }
 
+        var ulNoteHtml = '';
+        if (info.ulNote) {
+          ulNoteHtml = '<div class="tip-sec">' +
+            '<div class="tip-lbl">Nota:</div>' +
+            '<div class="tip-txt">' + U.esc(info.ulNote) + '</div>' +
+          '</div>';
+        }
+
+        /* v2.1: riesgos por déficit y por exceso, con su fuente. */
+        var riskHtml =
+          '<div class="tip-sec tip-risk low">' +
+            '<div class="tip-lbl">Riesgo por déficit:</div>' +
+            '<div class="tip-txt">' + U.esc(info.deficit) + '</div>' +
+            '<div class="tip-src">Fuente: ' + U.esc(info.deficitSource) + '</div>' +
+          '</div>' +
+          '<div class="tip-sec tip-risk high">' +
+            '<div class="tip-lbl">Riesgo por exceso:</div>' +
+            '<div class="tip-txt">' + U.esc(info.excess) + '</div>' +
+            '<div class="tip-src">Fuente: ' + U.esc(info.excessSource) + '</div>' +
+          '</div>';
+
         tipRoot.innerHTML =
           '<div class="tip-head">' +
             '<b>' + U.esc(info.name) + '</b>' +
@@ -1026,6 +1096,8 @@
             '<div class="tip-lbl">Límite máximo seguro diario (UL):</div>' +
             '<div class="tip-txt">' + U.esc(info.ul) + '</div>' +
           '</div>' +
+          ulNoteHtml +
+          riskHtml +
           ulAlertHtml;
 
         tipRoot.style.display = 'block';
@@ -1037,6 +1109,10 @@
 
         var top = rect.top - tipH - 10;
         if (top < 10) top = rect.bottom + 10;
+        /* v2.1: la burbuja es más alta (incluye riesgos); no dejar que se salga de la ventana. */
+        if (top + tipH > window.innerHeight - 10) {
+          top = Math.max(10, window.innerHeight - tipH - 10);
+        }
         var left = rect.left + (rect.width / 2) - (tipW / 2);
         if (left < 10) left = 10;
         if (left + tipW > window.innerWidth - 10) left = window.innerWidth - tipW - 10;
@@ -1269,7 +1345,7 @@
   window.Meal = {
     init: function () {
       root = U.$('#view-comida');
-      DB.cols.forEach(function (c) { COLBY[c.k] = c; });
+      DBX.cols().forEach(function (c) { COLBY[c.k] = c; });
       build();
       Store.subscribe(function () {
         if (S.compareId && !Store.getMetab(S.compareId)) {

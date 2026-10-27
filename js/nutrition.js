@@ -220,10 +220,11 @@
     }
     put('carb', carbVal, 'min', carbMin, carbMax, carbAvg);
 
-    /* Grasas saturadas, trans, colesterol, azúcares */
+    /* Grasas saturadas, trans, azúcares. El colesterol dietético ya no tiene
+       tope numérico oficial: las guías 2015–2020 retiraron los 300 mg/día y las
+       2025–2030 no fijan un valor. Por eso no se asigna referencia. */
     put('sfa', Math.round(kcal * 0.10 / 9), 'max');
     put('trans', 2, 'max');
-    put('cholesterol', 300, 'max');
     put('sugars', Math.round(kcal * 0.10 / 4), 'max');
 
     /* 5. Fibra: 14 g por 1000 kcal (rango 14 a 18 g/1000 kcal) */
@@ -434,27 +435,498 @@
     water: { limit: 6000, unit: 'ml', label: 'Agua / Líquidos', source: 'EFSA / ACSM', risk: 'Hiponatremia dilucional (intoxicación por agua).' },
     sfa: { limitPct: 10, unit: '% kcal', label: 'Grasas saturadas', source: 'OMS / FAO', risk: 'Incremento del colesterol LDL y riesgo aterosclerótico cardiovascular.' },
     trans: { limit: 2, unit: 'g', label: 'Grasas trans', source: 'OMS', risk: 'Inflamación endotelial, elevación de LDL y reducción de HDL.' },
-    cholesterol: { limit: 300, unit: 'mg', label: 'Colesterol dietético', source: 'AHA / NCEP', risk: 'Aumento del colesterol plasmático en respondedores hipercolesterolémicos.' },
+    cholesterol: {
+      noUl: true,
+      unit: 'mg',
+      label: 'Colesterol dietético',
+      source: 'NASEM/IOM · DGA 2015–2020 y 2025–2030',
+      risk: ''
+    },
     sugars: { limitPct: 10, unit: '% kcal', label: 'Azúcares libres/añadidos', source: 'OMS', risk: 'Caries dental, resistencia a la insulina y esteatosis hepática.' },
     va: { limit: 3000, unit: 'µg', label: 'Vitamina A (retinol preformado)', source: 'IOM (DRI) / EFSA', risk: 'Hepatotoxicidad, alteraciones óseas y teratogénesis (en embarazo).' },
+    retinol: { limit: 3000, unit: 'µg', label: 'Vitamina A preformada (retinol)', source: 'IOM (DRI) / EFSA', risk: 'Hepatotoxicidad, alteraciones óseas y teratogénesis (en embarazo).' },
     vc: { limit: 2000, unit: 'mg', label: 'Vitamina C', source: 'IOM (DRI)', risk: 'Trastornos gastrointestinales osmóticos y aumento del riesgo de litiasis renal (oxalato).' },
     vd: { limit: 100, unit: 'µg', label: 'Vitamina D (4,000 UI)', source: 'IOM (DRI) / Endocrine Society', risk: 'Hipercalcemia, calcificación de tejidos blandos y nefrocalcinosis.' },
     ve: { limit: 1000, unit: 'mg', label: 'Vitamina E (α-tocoferol)', source: 'IOM (DRI)', risk: 'Efecto antiagregante plaquetario excesivo y riesgo hemorrágico.' },
-    b3: { limit: 35, unit: 'mg', label: 'Niacina (Vitamina B3)', source: 'IOM (DRI)', risk: 'Rubefacción cutánea (flushing), hepatotoxicidad e hipotensión.' },
+    b3: {
+      limit: 35,
+      unit: 'mg',
+      displayLimit: '35 mg/día',
+      noAutoStatus: true,
+      label: 'Niacina (Vitamina B3)',
+      source: 'IOM (DRI)',
+      risk: 'Rubefacción cutánea (flushing), hepatotoxicidad e hipotensión.',
+      note: 'Este UL de 35 mg/día aplica solo a la niacina sintética de suplementos y ' +
+        'alimentos fortificados. La niacina natural presente en carnes, pescados, ' +
+        'cereales integrales y otras fuentes alimentarias no se asocia a estos efectos ' +
+        'adversos, por lo que este UL no colorea la barra ni genera alertas.'
+    },
     b6: { limit: 100, unit: 'mg', label: 'Vitamina B6 (piridoxina)', source: 'IOM (DRI) / EFSA', risk: 'Neuropatía sensorial periférica con consumo prolongado de altas dosis.' },
     folate: { limit: 1000, unit: 'µg', label: 'Folato / Ácido fólico', source: 'IOM (DRI)', risk: 'Enmascaramiento de la anemia megaloblástica por deficiencia de vitamina B12.' },
     choline: { limit: 3500, unit: 'mg', label: 'Colina', source: 'IOM (DRI)', risk: 'Olor corporal a pescado (trimetilaminuria), hipotensión y hepatotoxicidad.' },
     ca: { limit: 2500, unit: 'mg', label: 'Calcio', source: 'IOM (DRI)', risk: 'Síndrome de leche-alcalinos, calcificación vascular y cálculos renales.' },
     fe: { limit: 45, unit: 'mg', label: 'Hierro', source: 'IOM (DRI)', risk: 'Trastornos gastrointestinales severos, toxicidad celular por radicales libres y hemocromatosis secundaria.' },
+    mg: {
+      limit: 350,
+      unit: 'mg',
+      displayLimit: '350 mg/día (solo suplementos)',
+      noAutoStatus: true,
+      label: 'Magnesio (suplementos)',
+      source: 'IOM (DRI)',
+      risk: 'Diarrea osmótica, hipotensión y arritmias con dosis altas de suplementos.',
+      note: 'El UL de 350 mg/día aplica únicamente al magnesio de suplementos y medicamentos; ' +
+        'el magnesio de los alimentos no se asocia a efectos adversos en personas con función renal normal.'
+    },
     p: { limit: 4000, unit: 'mg', label: 'Fósforo', source: 'IOM (DRI)', risk: 'Hiperfosfatemia, hiperparatiroidismo secundario y calcificación ectópica.' },
     na: { limit: 2300, unit: 'mg', label: 'Sodio', source: 'IOM / OMS', risk: 'Hipertensión arterial sistémica, retención de líquidos y daño vascular.' },
     zn: { limit: 40, unit: 'mg', label: 'Zinc', source: 'IOM (DRI)', risk: 'Inhibición de la absorción de cobre, neutropenia y alteración del perfil lipídico.' },
     cu: { limit: 10, unit: 'mg', label: 'Cobre', source: 'IOM (DRI)', risk: 'Daño hepático celular y malestar gastrointestinal agudo.' },
     mn: { limit: 11, unit: 'mg', label: 'Manganeso', source: 'IOM (DRI)', risk: 'Neurotoxicidad similar al parkinsonismo con exposición acumulativa alta.' },
+    molybdenum: { limit: 2000, unit: 'µg', label: 'Molibdeno', source: 'IOM (DRI)', risk: 'Efectos reproductivos en estudios animales y síntomas similares a la gota con exposiciones muy altas.' },
     se: { limit: 400, unit: 'µg', label: 'Selenio', source: 'IOM (DRI)', risk: 'Selenosis (fragilidad y pérdida de cabello y uñas, aliento a ajo y neuropatía).' },
     iodine: { limit: 1100, unit: 'µg', label: 'Yodo', source: 'IOM (DRI)', risk: 'Disfunción tiroidea (hipotiroidismo inducido por efecto Wolff-Chaikoff o tiroiditis).' },
-    fluoride: { limit: 10, unit: 'mg', label: 'Flúor', source: 'IOM (DRI)', risk: 'Fluorosis esquelética y moteado dental.' },
+    fluoride: {
+      limit: 10000,
+      unit: 'µg',
+      displayLimit: '10 mg/día (10,000 µg)',
+      label: 'Flúor',
+      source: 'IOM (DRI)',
+      risk: 'Fluorosis esquelética y moteado dental.',
+      note: 'El UL de 10 mg/día corresponde a 10,000 µg (la base guarda el flúor en µg). ' +
+        'La EFSA fija un UL más estricto de 5 mg/día para adultos; se cita como referencia.'
+    },
     caffeine: { limit: 400, unit: 'mg', label: 'Cafeína', source: 'EFSA / FDA', risk: 'Ansiedad, taquicardia, insomnio y elevación transitoria de presión arterial.' }
+  };
+
+  /* ---------------------- Riesgos por déficit y por exceso (v2.1)
+     Cada entrada cita la fuente que respalda el riesgo. Solo se describen
+     riesgos documentados por organismos de referencia (NASEM/IOM, OMS/FAO,
+     EFSA, ACSM); cuando no existe un síndrome carencial o un UL oficial se
+     indica expresamente en lugar de inventar una cifra. */
+
+  N.DEFICIT = {
+    water: {
+      text: 'Deshidratación: cefalea, fatiga, deterioro de la atención y de la función física; en casos graves, insuficiencia renal y shock.',
+      source: 'EFSA (2010, Scientific Opinion on Dietary Reference Values for water) y ACSM.'
+    },
+    kcal: {
+      text: 'Pérdida de peso involuntaria, fatiga, pérdida de masa muscular y mayor riesgo de deficiencias de micronutrientes cuando la ingesta es insuficiente de forma sostenida.',
+      source: 'FAO/OMS/UNU (2004, Human Energy Requirements).'
+    },
+    protein: {
+      text: 'Pérdida progresiva de masa muscular, edema por hipoalbuminemia, retraso en la cicatrización y mayor susceptibilidad a infecciones.',
+      source: 'OMS/FAO/UNU (2007, Protein and Amino Acid Requirements in Human Nutrition).'
+    },
+    fat: {
+      text: 'La ingesta insuficiente de grasa compromete la absorción de vitaminas liposolubles (A, D, E y K) y el aporte de ácidos grasos esenciales.',
+      source: 'NASEM/IOM (2005, AMDR) y OMS/FAO (2010, Fats and Fatty Acids in Human Nutrition).'
+    },
+    sfa: {
+      text: 'No existe un requerimiento mínimo: el organismo sintetiza ácidos grasos saturados. La referencia es un límite superior, no una meta que haya que alcanzar.',
+      source: 'OMS/FAO (2010) y OMS (2018, REPLACE).'
+    },
+    mufa: {
+      text: 'No hay un requerimiento específico. La recomendación es sustituir grasas saturadas por insaturadas sin aumentar la grasa total.',
+      source: 'OMS/FAO (2010) y NASEM/IOM (2005).'
+    },
+    pufa: {
+      text: 'El déficit de ácidos grasos esenciales (linoleico y α-linolénico) causa dermatitis, mala cicatrización y alteraciones visuales y neurológicas.',
+      source: 'NASEM/IOM (2005) y EFSA (2010).'
+    },
+    insat: {
+      text: 'No hay un requerimiento específico. La recomendación es sustituir grasas saturadas por insaturadas sin aumentar la grasa total.',
+      source: 'OMS/FAO (2010) y NASEM/IOM (2005).'
+    },
+    trans: {
+      text: 'No existe requerimiento; la OMS recomienda que su aporte sea lo más bajo posible (< 1 % de la energía).',
+      source: 'OMS (2018, REPLACE) y OMS/FAO (2010).'
+    },
+    cholesterol: {
+      text: 'No es un nutriente esencial: el hígado lo sintetiza y no se ha descrito un síndrome carencial por su ausencia en la dieta.',
+      source: 'NASEM/IOM (2005) y Dietary Guidelines for Americans 2025–2030.'
+    },
+    carb: {
+      text: 'El IOM establece una RDA de 130 g/día de glucosa para el cerebro; ingestas muy bajas pueden causar fatiga y cefalea.',
+      source: 'NASEM/IOM (2005, Dietary Reference Intakes for Energy, Carbohydrate, Fiber, Fat, Fatty Acids, Cholesterol, Protein, and Amino Acids).'
+    },
+    sugars: {
+      text: 'No hay requerimiento de azúcares libres o añadidos; los hidratos de carbono pueden cubrirse con almidón y fibra.',
+      source: 'OMS (2015, Guideline: Sugars Intake for Adults and Children) y NASEM/IOM (2005).'
+    },
+    fiber: {
+      text: 'Estreñimiento, menor diversidad de la microbiota intestinal y mayor riesgo de enfermedad diverticular y cardiovascular.',
+      source: 'NASEM/IOM (2005) y OMS (2003, Diet, Nutrition and the Prevention of Chronic Diseases).'
+    },
+    starch: {
+      text: 'No hay un requerimiento específico; la glucosa puede obtenerse de otros carbohidratos.',
+      source: 'NASEM/IOM (2005).'
+    },
+    ash: {
+      text: 'No aplica: las cenizas son el residuo mineral total, no un nutriente del que pueda haber déficit.',
+      source: 'AOAC International (métodos de composición de alimentos).'
+    },
+    la: {
+      text: 'Dermatitis, pérdida de cabello, mala cicatrización y mayor susceptibilidad a infecciones por deficiencia de ácidos grasos esenciales.',
+      source: 'NASEM/IOM (2005) y OMS/FAO (2010).'
+    },
+    ala: {
+      text: 'Alteraciones visuales y neurológicas, sequedad de la piel y dermatitis por deficiencia de ácidos grasos esenciales.',
+      source: 'EFSA (2010) y NASEM/IOM (2005).'
+    },
+    epa: {
+      text: 'No tiene un requerimiento individual establecido; el ALA puede convertirse en EPA, aunque con baja eficiencia.',
+      source: 'EFSA (2010) y NASEM/IOM (2005).'
+    },
+    dha: {
+      text: 'No tiene un requerimiento individual establecido; el ALA puede convertirse en DHA, aunque con baja eficiencia.',
+      source: 'EFSA (2010) y NASEM/IOM (2005).'
+    },
+    dpa: {
+      text: 'No tiene requerimiento establecido; es un intermediario del metabolismo de los omega-3.',
+      source: 'EFSA (2010).'
+    },
+    ara: {
+      text: 'No tiene requerimiento establecido; el organismo lo sintetiza a partir del ácido linoleico.',
+      source: 'NASEM/IOM (2005).'
+    },
+    n3: {
+      text: 'El déficit de omega-3 se manifiesta como alteraciones visuales y neurológicas y dermatitis.',
+      source: 'EFSA (2010) y NASEM/IOM (2005).'
+    },
+    n6: {
+      text: 'El déficit de omega-6 causa dermatitis y mala cicatrización por deficiencia de ácidos grasos esenciales.',
+      source: 'NASEM/IOM (2005).'
+    },
+    ratio: {
+      text: 'No aplica: es un indicador calculado, no un nutriente; no tiene requerimiento ni síndrome carencial.',
+      source: 'NASEM/IOM (2005) y EFSA (2010).'
+    },
+    va: {
+      text: 'Ceguera nocturna, xeroftalmia, queratinización de los epitelios y mayor mortalidad por infecciones.',
+      source: 'OMS (2009, Global Prevalence of Vitamin A Deficiency) y NASEM/IOM (2001).'
+    },
+    retinol: {
+      text: 'Al ser la forma preformada de la vitamina A, su déficit produce las mismas manifestaciones que la deficiencia de vitamina A.',
+      source: 'NASEM/IOM (2001) y OMS (2009).'
+    },
+    beta_car: {
+      text: 'Es provitamina A; su falta no causa deficiencia si el aporte de retinol o de vitamina A preformada es suficiente.',
+      source: 'NASEM/IOM (2001).'
+    },
+    alpha_car: {
+      text: 'Es provitamina A; su falta no causa deficiencia si el aporte de retinol o de vitamina A preformada es suficiente.',
+      source: 'NASEM/IOM (2001).'
+    },
+    beta_cryp: {
+      text: 'Es provitamina A; su falta no causa deficiencia si el aporte de retinol o de vitamina A preformada es suficiente.',
+      source: 'NASEM/IOM (2001).'
+    },
+    lycopene: {
+      text: 'No es un nutriente esencial; no se ha descrito un síndrome carencial.',
+      source: 'NASEM/IOM (2000, Dietary Reference Intakes for Vitamin C, Vitamin E, Selenium, and Carotenoids).'
+    },
+    lutein: {
+      text: 'No es un nutriente esencial; no se ha establecido un requerimiento ni un síndrome carencial.',
+      source: 'NASEM/IOM (2000).'
+    },
+    vc: {
+      text: 'Escorbuto: sangrado de encías, petequias, mala cicatrización, fatiga y anemia.',
+      source: 'NASEM/IOM (2000) y OMS/FAO (2004, Vitamin and Mineral Requirements in Human Nutrition).'
+    },
+    vd: {
+      text: 'Raquitismo en niños, osteomalacia y pérdida de masa ósea en adultos; debilidad muscular.',
+      source: 'NASEM/IOM (2011) y Endocrine Society (2011).'
+    },
+    ve: {
+      text: 'Anemia hemolítica, neuropatía periférica y degeneración retiniana (deficiencia rara, casi siempre por malabsorción).',
+      source: 'NASEM/IOM (2000).'
+    },
+    vk: {
+      text: 'Alteración de la coagulación con tendencia a hemorragias y menor mineralización ósea.',
+      source: 'NASEM/IOM (2001).'
+    },
+    b1: {
+      text: 'Beriberi (neuropatía e insuficiencia cardíaca) y síndrome de Wernicke-Korsakoff en el alcoholismo.',
+      source: 'NASEM/IOM (1998) y OMS/FAO (2004).'
+    },
+    b2: {
+      text: 'Queilosis, estomatitis angular, dermatitis seborreica y anemia.',
+      source: 'NASEM/IOM (1998).'
+    },
+    b3: {
+      text: 'Pelagra: dermatitis, diarrea y demencia; riesgo con dietas monótonas a base de maíz no nixtamalizado.',
+      source: 'NASEM/IOM (1998) y OMS/FAO (2004).'
+    },
+    b5: {
+      text: 'Deficiencia rara: fatiga, parestesias, calambres y molestias digestivas.',
+      source: 'NASEM/IOM (1998).'
+    },
+    b6: {
+      text: 'Dermatitis seborreica, glositis, anemia y convulsiones en lactantes.',
+      source: 'NASEM/IOM (1998).'
+    },
+    biotin: {
+      text: 'Deficiencia rara: dermatitis, alopecia y alteraciones neurológicas.',
+      source: 'NASEM/IOM (1998).'
+    },
+    folate: {
+      text: 'Anemia megaloblástica y defectos del tubo neural en el embarazo.',
+      source: 'NASEM/IOM (1998) y OMS/FAO (2004).'
+    },
+    b12: {
+      text: 'Anemia megaloblástica y degeneración neurológica (neuropatía y deterioro cognitivo).',
+      source: 'NASEM/IOM (1998) y OMS/FAO (2004).'
+    },
+    choline: {
+      text: 'No se ha documentado un síndrome carencial claro en adultos sanos; en estudios experimentales el déficit se asocia a daño hepático y muscular.',
+      source: 'NASEM/IOM (1998).'
+    },
+    betaine: {
+      text: 'No se ha establecido un requerimiento ni un síndrome carencial; el organismo lo sintetiza y puede obtenerse de la colina.',
+      source: 'NASEM/IOM (DRI) y EFSA.'
+    },
+    ca: {
+      text: 'Osteoporosis y mayor riesgo de fracturas; tetania y raquitismo en casos graves.',
+      source: 'NASEM/IOM (2011) y OMS/FAO (2004).'
+    },
+    fe: {
+      text: 'Anemia ferropénica: fatiga, palidez y menor capacidad física y cognitiva.',
+      source: 'NASEM/IOM (2001) y OMS/FAO (2004).'
+    },
+    mg: {
+      text: 'Debilidad muscular, calambres, arritmias e hipocalcemia en el déficit grave.',
+      source: 'NASEM/IOM (1997).'
+    },
+    p: {
+      text: 'Debilidad muscular, dolor óseo y raquitismo u osteomalacia (deficiencia rara).',
+      source: 'NASEM/IOM (1997).'
+    },
+    k: {
+      text: 'Hipopotasemia: debilidad muscular, arritmias, estreñimiento e íleo.',
+      source: 'NASEM/IOM (2005) y OMS/FAO (2004).'
+    },
+    na: {
+      text: 'En pérdidas excesivas (sudoración intensa, vómitos, diarrea) puede causar hiponatremia: cefalea, confusión, convulsiones y coma.',
+      source: 'NASEM/IOM (2005) y OMS/FAO (2004).'
+    },
+    zn: {
+      text: 'Retraso del crecimiento, pérdida de apetito, dermatitis, alteraciones inmunitarias y de la cicatrización.',
+      source: 'NASEM/IOM (2001) y OMS/FAO (2004).'
+    },
+    cu: {
+      text: 'Anemia, neutropenia y alteraciones óseas y neurológicas (deficiencia rara).',
+      source: 'NASEM/IOM (2001).'
+    },
+    mn: {
+      text: 'No se ha descrito un síndrome carencial en humanos; su esencialidad en la dieta no está bien establecida.',
+      source: 'NASEM/IOM (2001).'
+    },
+    se: {
+      text: 'Enfermedad de Keshan (cardiomiopatía) y enfermedad de Kashin-Beck (osteocondropatía).',
+      source: 'OMS/FAO (2004) y NASEM/IOM (2000).'
+    },
+    iodine: {
+      text: 'Bocio, hipotiroidismo y alteraciones del desarrollo neurológico (cretinismo).',
+      source: 'OMS (2007, Assessment of Iodine Deficiency Disorders) y NASEM/IOM (2001).'
+    },
+    chromium: {
+      text: 'No se ha confirmado un síndrome carencial en humanos; su esencialidad es discutida.',
+      source: 'NASEM/IOM (2001) y EFSA (2014).'
+    },
+    molybdenum: {
+      text: 'No se ha observado deficiencia en poblaciones sanas; se han descrito casos aislados con alteraciones neurológicas en nutrición parenteral prolongada.',
+      source: 'NASEM/IOM (2001).'
+    },
+    fluoride: {
+      text: 'No es esencial para la vida, pero su ingesta insuficiente se asocia a mayor caries dental.',
+      source: 'NASEM/IOM (1997) y OMS (2017, Guidelines for Drinking-water Quality).'
+    },
+    phytosterols: {
+      text: 'No son nutrientes esenciales; no se ha establecido un requerimiento ni un síndrome carencial.',
+      source: 'EFSA (2012) y NASEM/IOM (2000).'
+    },
+    beta_sito: {
+      text: 'No es un nutriente esencial; no se ha establecido un requerimiento ni un síndrome carencial.',
+      source: 'EFSA (2012) y NASEM/IOM (2000).'
+    },
+    caffeine: {
+      text: 'No es un nutriente esencial; no hay requerimiento. La supresión brusca en consumidores habituales puede causar cefalea y somnolencia.',
+      source: 'EFSA (2015, Scientific Opinion on the Safety of Caffeine).'
+    },
+    theobromine: {
+      text: 'No es un nutriente esencial; no se ha establecido un requerimiento ni un síndrome carencial.',
+      source: 'NASEM/IOM (DRI) y EFSA.'
+    }
+  };
+
+  /* Riesgos por exceso que no forman parte de N.UL (sin UL oficial o con
+     referencia distinta al UL). Los nutrientes con UL usan N.UL.risk. */
+  N.EXCESS = {
+    kcal: {
+      text: 'Balance energético positivo: ganancia de peso, obesidad y mayor riesgo cardiometabólico.',
+      source: 'OMS/FAO (2004) y OMS (2020, Obesity and Overweight).'
+    },
+    fat: {
+      text: 'El exceso de grasa total favorece el balance energético positivo; el riesgo depende sobre todo del tipo de grasa (saturada y trans).',
+      source: 'OMS/FAO (2010).'
+    },
+    carb: {
+      text: 'El exceso de carbohidratos refinados y azúcares añadidos se asocia a obesidad, caries y resistencia a la insulina.',
+      source: 'OMS (2015) y NASEM/IOM (2005).'
+    },
+    mufa: {
+      text: 'No tiene UL. Un aporte elevado contribuye al exceso calórico, aunque sustituir saturadas por monoinsaturadas es favorable.',
+      source: 'OMS/FAO (2010).'
+    },
+    pufa: {
+      text: 'No tiene UL. El aporte debe mantenerse dentro del AMDR: 5–10 % de la energía para omega-6 y 0.6–1.2 % para omega-3.',
+      source: 'NASEM/IOM (2005).'
+    },
+    insat: {
+      text: 'No tiene UL. Un aporte elevado contribuye al exceso calórico, aunque sustituir saturadas por insaturadas es favorable.',
+      source: 'OMS/FAO (2010).'
+    },
+    la: {
+      text: 'No tiene UL. El AMDR de omega-6 es 5–10 % de la energía; por encima no hay beneficio adicional establecido.',
+      source: 'NASEM/IOM (2005).'
+    },
+    ala: {
+      text: 'No tiene UL. El AMDR de omega-3 es 0.6–1.2 % de la energía; el exceso no aporta beneficio adicional establecido.',
+      source: 'NASEM/IOM (2005) y EFSA (2010).'
+    },
+    epa: {
+      text: 'La EFSA considera seguras hasta 5 g/día de EPA + DHA combinados en adultos; por encima no hay beneficio establecido y puede aumentar el riesgo de sangrado.',
+      source: 'EFSA (2012, Scientific Opinion on the Tolerable Upper Intake Level of EPA and DHA).'
+    },
+    dha: {
+      text: 'La EFSA considera seguras hasta 5 g/día de EPA + DHA combinados en adultos; por encima no hay beneficio establecido y puede aumentar el riesgo de sangrado.',
+      source: 'EFSA (2012, Scientific Opinion on the Tolerable Upper Intake Level of EPA and DHA).'
+    },
+    dpa: {
+      text: 'No tiene UL establecido; es un intermediario del metabolismo de los omega-3.',
+      source: 'EFSA (2012).'
+    },
+    ara: {
+      text: 'No tiene UL establecido; se sintetiza a partir del ácido linoleico.',
+      source: 'NASEM/IOM (2005).'
+    },
+    n3: {
+      text: 'No tiene UL. El AMDR de omega-3 es 0.6–1.2 % de la energía; el exceso no aporta beneficio adicional establecido.',
+      source: 'NASEM/IOM (2005) y EFSA (2010).'
+    },
+    n6: {
+      text: 'No tiene UL. El AMDR de omega-6 es 5–10 % de la energía; por encima no hay beneficio adicional establecido.',
+      source: 'NASEM/IOM (2005).'
+    },
+    ratio: {
+      text: 'No aplica: es un indicador calculado, no un nutriente. No tiene UL.',
+      source: 'NASEM/IOM (2005).'
+    },
+    starch: {
+      text: 'No tiene UL. El exceso de almidón refinado eleva la carga glucémica y desplaza alimentos ricos en fibra.',
+      source: 'NASEM/IOM (2005) y OMS (2015).'
+    },
+    ash: {
+      text: 'No aplica: es un residuo mineral, no un nutriente con límite de ingesta.',
+      source: 'AOAC International (métodos de composición de alimentos).'
+    },
+    beta_car: {
+      text: 'Los suplementos de β-caroteno en dosis altas se asociaron a mayor riesgo de cáncer de pulmón en fumadores (estudios ATBC y CARET). Los alimentos ricos en β-caroteno no muestran ese riesgo; el exceso dietético solo causa carotenodermia benigna.',
+      source: 'NIH Office of Dietary Supplements (Vitamin A) y NASEM/IOM (2000).'
+    },
+    alpha_car: {
+      text: 'No se ha establecido un UL; no se han descrito efectos adversos por su ingesta dietética.',
+      source: 'NASEM/IOM (2000).'
+    },
+    beta_cryp: {
+      text: 'No se ha establecido un UL; no se han descrito efectos adversos por su ingesta dietética.',
+      source: 'NASEM/IOM (2000).'
+    },
+    lycopene: {
+      text: 'No se ha establecido un UL; no se han descrito efectos adversos por su ingesta dietética.',
+      source: 'NASEM/IOM (2000).'
+    },
+    lutein: {
+      text: 'No se ha establecido un UL; no se han descrito efectos adversos por su ingesta dietética.',
+      source: 'NASEM/IOM (2000).'
+    },
+    vk: {
+      text: 'No se ha establecido un UL; no se han descrito efectos adversos por su ingesta dietética.',
+      source: 'NASEM/IOM (2001).'
+    },
+    b1: {
+      text: 'No se ha establecido un UL; el exceso se elimina por la orina y no se han descrito efectos adversos.',
+      source: 'NASEM/IOM (1998).'
+    },
+    b2: {
+      text: 'No se ha establecido un UL; la absorción está limitada y el exceso se excreta por la orina.',
+      source: 'NASEM/IOM (1998).'
+    },
+    b5: {
+      text: 'No se ha establecido un UL; no se han descrito efectos adversos por su ingesta dietética.',
+      source: 'NASEM/IOM (1998).'
+    },
+    biotin: {
+      text: 'No se ha establecido un UL; no se han descrito efectos adversos por su ingesta dietética.',
+      source: 'NASEM/IOM (1998).'
+    },
+    b12: {
+      text: 'No se ha establecido un UL; no se han descrito efectos adversos por su ingesta dietética.',
+      source: 'NASEM/IOM (1998).'
+    },
+    betaine: {
+      text: 'No se ha establecido un UL; no se han descrito efectos adversos por su ingesta dietética.',
+      source: 'NASEM/IOM (DRI) y EFSA.'
+    },
+    k: {
+      text: 'No se ha establecido un UL; no se han descrito efectos adversos por su ingesta dietética en personas sanas.',
+      source: 'NASEM/IOM (2005).'
+    },
+    chromium: {
+      text: 'No se ha establecido un UL. Las dosis farmacológicas de suplementos no han demostrado beneficio y deben vigilarse.',
+      source: 'NASEM/IOM (2001).'
+    },
+    cholesterol: {
+      text: 'No hay UL oficial: las guías 2015–2020 retiraron el tope de 300 mg/día y las 2025–2030 no fijan una cifra; se recomienda limitar las grasas saturadas a <10 % de las kcal. En prevención cardiovascular de alto riesgo se cita <200 mg/día, pero es una referencia clínica, no un UL poblacional.',
+      source: 'Dietary Guidelines for Americans 2015–2020 y 2025–2030; NASEM/IOM.'
+    },
+    phytosterols: {
+      text: 'No hay UL. La EFSA considera que 1.5–3 g/día de fitosteroles/estanoles reducen el LDL; dosis mayores pueden disminuir la absorción de carotenoides.',
+      source: 'EFSA (2012, Scientific Opinion on the Substantiation of a Health Claim Related to Plant Sterols/Stanols).'
+    },
+    beta_sito: {
+      text: 'No hay UL. La EFSA considera que 1.5–3 g/día de fitosteroles/estanoles reducen el LDL; dosis mayores pueden disminuir la absorción de carotenoides.',
+      source: 'EFSA (2012).'
+    },
+    theobromine: {
+      text: 'No hay UL oficial establecido para la teobromina.',
+      source: 'EFSA (2015) y NASEM/IOM.'
+    }
+  };
+
+  /* ------------------- Rangos aceptables de distribución de macros (AMDR) */
+  N.AMDR = {
+    protein: {
+      label: 'Proteína',
+      iom: [10, 35],
+      who: [10, 15],
+      sourceIom: 'IOM/NASEM (AMDR)',
+      sourceWho: 'WHO/FAO'
+    },
+    fat: {
+      label: 'Grasas',
+      iom: [20, 35],
+      who: [15, 30],
+      sourceIom: 'IOM/NASEM (AMDR)',
+      sourceWho: 'WHO/FAO'
+    },
+    carb: {
+      label: 'Carbohidratos',
+      iom: [45, 65],
+      who: [55, 75],
+      sourceIom: 'IOM/NASEM (AMDR)',
+      sourceWho: 'WHO/FAO'
+    }
   };
 
   /**
@@ -463,16 +935,20 @@
    */
   N.getUlStatus = function (k, val, userWeight, userKcal) {
     var ul = N.UL[k];
-    if (!ul) return { status: 'none', limit: null };
+    if (!ul || ul.noUl) return { status: 'none', limit: null, info: ul || null };
     var limit = ul.limit;
     if (ul.perKg && userWeight) limit = ul.limit * userWeight;
     if (ul.limitPct && userKcal) {
       var cFactor = (k === 'sfa' || k === 'fat') ? 9 : 4;
       limit = (userKcal * (ul.limitPct / 100)) / cFactor;
     }
-    if (!limit) return { status: 'none', limit: null };
+    if (!limit) return { status: 'none', limit: null, info: ul };
 
     var ratio = val / limit;
+    /* UL de referencia (p. ej. niacina sintética): se informa, no se alerta. */
+    if (ul.noAutoStatus) {
+      return { status: 'none', limit: limit, ratio: ratio, info: ul };
+    }
     if (ratio >= 1.0) {
       return { status: 'danger', limit: limit, ratio: ratio, info: ul };
     } else if (ratio >= 0.85) {
@@ -485,7 +961,7 @@
    * Genera la información para la burbuja flotante al pasar el cursor (hover) por un nutriente.
    */
   N.nutrientBubbleInfo = function (k, totVal, refs, userMeta) {
-    var c = (window.DB && DB.cols) ? DB.cols.filter(function (x) { return x.k === k; })[0] : null;
+    var c = (window.DBX && DBX.cols) ? DBX.cols().filter(function (x) { return x.k === k; })[0] : null;
     var name = c ? c.label : k;
     var unit = c ? c.unidad : '';
     var r = refs ? refs[k] : null;
@@ -532,8 +1008,8 @@
       howText = 'Límite máximo recomendado: menos del 1 % de la energía (< 2 g/día).';
       sourceText = 'Organización Mundial de la Salud (OMS / Eliminación global de grasas trans).';
     } else if (k === 'cholesterol') {
-      howText = 'Límite preventivo cardiovascular tradicional: máximo 300 mg/día.';
-      sourceText = 'American Heart Association (AHA) y NCEP.';
+      howText = 'Sin tope numérico oficial: el foco está en limitar las grasas saturadas a menos del 10 % de las kcal.';
+      sourceText = 'Dietary Guidelines for Americans 2015–2020 y 2025–2030; National Academy of Medicine (IOM / NASEM).';
     } else if (c && c.sec === 'vit') {
       howText = 'Ingesta Diaria Recomendada (RDA/AI) para adultos según sexo biológico y grupo de edad.';
       sourceText = 'National Academy of Medicine (IOM / NASEM) Dietary Reference Intakes (DRI).';
@@ -547,12 +1023,35 @@
 
     var ulText = '';
     var ulRisk = '';
-    if (ulStatus.status !== 'none' && ulStatus.info) {
-      ulText = U.n(ulStatus.limit, (c && c.dec) ? c.dec : 0) + ' ' + (c ? c.unidad : '') + ' / día (' + ulStatus.info.source + ')';
+    var ulNote = '';
+    if (ulStatus.info && ulStatus.info.noUl) {
+      ulText = 'No aplica: este nutriente no tiene UL oficial.';
+      ulNote = ulStatus.info.note || '';
+    } else if (ulStatus.limit && ulStatus.info) {
+      var shownLimit = ulStatus.info.displayLimit ||
+        (U.n(ulStatus.limit, (c && c.dec) ? c.dec : 0) + ' ' + (c ? c.unidad : '') + ' / día');
+      ulText = shownLimit + ' · ' + ulStatus.info.source;
       ulRisk = ulStatus.info.risk;
+      ulNote = ulStatus.info.note || '';
     } else {
       ulText = 'Sin límite tóxico adverso cuantificado en fuentes dietéticas habituales (baja toxicidad).';
     }
+
+    /* v2.1: riesgo documentado por déficit y por exceso, cada uno con su fuente. */
+    var deficitInfo = N.DEFICIT[k] || null;
+    var deficitText = deficitInfo ? deficitInfo.text :
+      'No se ha descrito un síndrome carencial para este nutriente en personas sanas.';
+    var deficitSource = deficitInfo ? deficitInfo.source : 'NASEM/IOM (DRI) y EFSA.';
+
+    var excessInfo = null;
+    if (ulStatus.info && ulStatus.info.risk) {
+      excessInfo = { text: ulStatus.info.risk, source: ulStatus.info.source };
+    } else if (N.EXCESS[k]) {
+      excessInfo = N.EXCESS[k];
+    }
+    var excessText = excessInfo ? excessInfo.text :
+      'No se ha establecido un límite máximo tolerable (UL) ni efectos adversos por exceso en la ingesta dietética habitual.';
+    var excessSource = excessInfo ? excessInfo.source : 'NASEM/IOM (DRI) y EFSA.';
 
     return {
       k: k,
@@ -564,7 +1063,12 @@
       how: howText,
       source: sourceText,
       ul: ulText,
+      ulNote: ulNote,
       ulRisk: ulRisk,
+      deficit: deficitText,
+      deficitSource: deficitSource,
+      excess: excessText,
+      excessSource: excessSource,
       ulStatus: ulStatus.status,
       ulLimit: ulStatus.limit,
       ulRatio: ulStatus.ratio
@@ -597,7 +1101,7 @@
     var v = {}, missing = {};
     if (!window.DB) return { v: v, missing: missing };
 
-    DB.cols.forEach(function (c) {
+    DBX.cols().forEach(function (c) {
       if (c.tipo === 'num' && c.k !== 'porcion') {
         v[c.k] = 0;
         missing[c.k] = 0;

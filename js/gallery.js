@@ -5,9 +5,6 @@
 (function () {
   'use strict';
 
-  var BY_ID = {};
-  (window.DB ? DB.alimentos : []).forEach(function (a) { BY_ID[a.id] = a; });
-
   var SECCIONES = [
     { k: 'macro',  label: 'Energía y macronutrientes', open: true },
     { k: 'grasas', label: 'Ácidos grasos' },
@@ -16,26 +13,40 @@
     { k: 'fito',   label: 'Fitoesteroles y otros compuestos' }
   ];
 
+  var PAGE = 120;
+
   /* --------------------------------------------------------------- galería */
 
   /**
    * @param {HTMLElement} host
    * @param {{
    *   selectable?:boolean, selected?:Set<string>, onToggle?:function,
-   *   onOpen?:function, card?:number
+   *   onOpen?:function, card?:number, showDbSwitch?:boolean
    * }} opts
    */
   function create(host, opts) {
     opts = opts || {};
-    var allCats = (window.DB ? DB.categorias : []).slice();
+    var allCats = [];
     var state = {
       q: '',
       cats: {},
+      limit: PAGE,
       card: opts.card || (window.Store ? Store.prefs.card : 132) || 132
     };
-    allCats.forEach(function (c) { state.cats[c] = true; });
+
+    function resetCats() {
+      allCats = DBX.categorias().slice();
+      state.cats = {};
+      allCats.forEach(function (c) { state.cats[c] = true; });
+      state.limit = PAGE;
+    }
+    resetCats();
 
     host.innerHTML =
+      '<div class="gallery-db-bar">' +
+        (opts.showDbSwitch === false ? '' : DBX.switchHtml()) +
+        '<span class="db-count" id="gl-count"></span>' +
+      '</div>' +
       '<div class="toolbar">' +
         '<div class="search">' + U.icon('search', 16) +
           '<input class="input" type="search" placeholder="Buscar alimento, categoría o ID…" ' +
@@ -52,13 +63,16 @@
       '</div>' +
       '<div class="chips"></div>' +
       '<div class="grid"></div>' +
+      '<div class="grid-more"></div>' +
       '<div class="empty hidden"></div>';
 
     var searchEl = host.querySelector('input[type="search"]');
     var rangeEl = host.querySelector('input[type="range"]');
     var chipsEl = host.querySelector('.chips');
     var gridEl = host.querySelector('.grid');
+    var moreEl = host.querySelector('.grid-more');
     var emptyEl = host.querySelector('.empty');
+    var countEl = host.querySelector('#gl-count');
 
     function applyCard() {
       host.style.setProperty('--card', state.card + 'px');
@@ -67,13 +81,13 @@
 
     function counts() {
       var c = {};
-      DB.alimentos.forEach(function (a) { c[a.categoria] = (c[a.categoria] || 0) + 1; });
+      DBX.foods().forEach(function (a) { c[a.categoria] = (c[a.categoria] || 0) + 1; });
       return c;
     }
-    var CT = counts();
 
     function renderChips() {
-      var total = DB.alimentos.length;
+      var CT = counts();
+      var total = DBX.foods().length;
       var allOn = allCats.every(function (c) { return state.cats[c]; });
       var html = '<button class="chip chip-all' + (allOn ? ' is-on' : '') +
         '" data-cat="__all">Todos <span class="n">' + total + '</span></button>';
@@ -82,14 +96,20 @@
           U.esc(c) + '">' + U.esc(c) + ' <span class="n">' + (CT[c] || 0) + '</span></button>';
       });
       chipsEl.innerHTML = html;
+      if (countEl) {
+        countEl.textContent = DBX.mode() === 'extended'
+          ? 'Base ampliada · ' + U.n(total, 0) + ' alimentos'
+          : 'Base principal · ' + U.n(total, 0) + ' alimentos';
+      }
     }
 
     function filtered() {
       var q = U.norm(state.q);
-      return DB.alimentos.filter(function (a) {
+      return DBX.foods().filter(function (a) {
         if (!state.cats[a.categoria]) return false;
         if (!q) return true;
         return U.norm(a.nombre).indexOf(q) >= 0 ||
+          U.norm(a.nombre_en || '').indexOf(q) >= 0 ||
           U.norm(a.categoria).indexOf(q) >= 0 ||
           U.norm(a.id).indexOf(q) >= 0;
       });
@@ -102,6 +122,7 @@
 
       if (!list.length) {
         gridEl.innerHTML = '';
+        moreEl.innerHTML = '';
         emptyEl.classList.remove('hidden');
         if (!allCats.some(function (c) { return state.cats[c]; })) {
           emptyEl.innerHTML = U.icon('grid', 42) +
@@ -118,9 +139,10 @@
       }
       emptyEl.classList.add('hidden');
 
+      var shown = list.slice(0, state.limit);
       var html = '';
-      for (var i = 0; i < list.length; i++) {
-        var a = list[i];
+      for (var i = 0; i < shown.length; i++) {
+        var a = shown[i];
         var on = !selEmpty && sel && sel.has(a.id);
         html += '<button class="food-card' + (on ? ' is-selected' : '') +
           '" data-id="' + U.esc(a.id) + '" title="' + U.esc(a.nombre) + '">' +
@@ -131,6 +153,15 @@
           '</button>';
       }
       gridEl.innerHTML = html;
+
+      if (list.length > shown.length) {
+        moreEl.innerHTML = '<button class="btn btn-sm btn-outline" data-act="more">' +
+          'Mostrar más <span class="n">' + U.n(list.length - shown.length, 0) + ' restantes</span></button>' +
+          '<span class="note">Mostrando ' + U.n(shown.length, 0) + ' de ' + U.n(list.length, 0) + '</span>';
+      } else {
+        moreEl.innerHTML = '<span class="note">' + U.n(list.length, 0) +
+          ' alimento' + (list.length === 1 ? '' : 's') + '</span>';
+      }
     }
 
     function refresh() {
@@ -142,6 +173,7 @@
 
     searchEl.addEventListener('input', U.debounce(function () {
       state.q = searchEl.value;
+      state.limit = PAGE;
       renderGrid();
     }, 120));
 
@@ -161,13 +193,14 @@
       } else {
         state.cats[cat] = !state.cats[cat];
       }
+      state.limit = PAGE;
       refresh();
     });
 
     gridEl.addEventListener('click', function (e) {
       var card = e.target.closest('.food-card');
       if (!card) return;
-      var food = BY_ID[card.getAttribute('data-id')];
+      var food = DBX.byId(card.getAttribute('data-id'));
       if (!food) return;
       if (opts.selectable) {
         if (opts.onToggle) opts.onToggle(food, card);
@@ -176,6 +209,12 @@
       } else {
         detail(food);
       }
+    });
+
+    moreEl.addEventListener('click', function (e) {
+      if (!e.target.closest('[data-act="more"]')) return;
+      state.limit += PAGE;
+      renderGrid();
     });
 
     emptyEl.addEventListener('click', function (e) {
@@ -187,8 +226,18 @@
       } else {
         searchEl.value = '';
         state.q = '';
+        state.limit = PAGE;
         renderGrid();
       }
+    });
+
+    DBX.bindSwitch(host);
+
+    var unsub = DBX.subscribe(function () {
+      if (!document.body.contains(host)) { unsub(); return; }
+      resetCats();
+      DBX.bindSwitch(host);
+      refresh();
     });
 
     applyCard();
@@ -224,7 +273,7 @@
   function detail(food, opts) {
     opts = opts || {};
     var bySec = {};
-    DB.cols.forEach(function (c) {
+    DBX.cols().forEach(function (c) {
       (bySec[c.sec] = bySec[c.sec] || []).push(c);
     });
 
@@ -236,6 +285,8 @@
         '<img src="' + U.esc(food.icono) + '" alt="">' +
         '<div>' +
           '<h2>' + U.esc(food.nombre) + '</h2>' +
+          (food.nombre_en && food.nombre_en !== food.nombre
+            ? '<p class="hero-en">' + U.esc(food.nombre_en) + '</p>' : '') +
           '<div class="hero-tags">' +
             '<span class="badge">' + U.esc(food.id) + '</span>' +
             '<span class="badge blue">' + U.esc(food.categoria) + '</span>' +
@@ -247,6 +298,8 @@
         U.esc(food.unidad || 'g') + '. Una celda vacía significa que la fuente no lo reporta, ' +
         'no que valga cero.</p>' +
       '<div class="kv-grid">' +
+        '<div class="kv"><span class="k">Nombre en inglés (USDA)</span><span class="v" style="white-space:normal;text-align:right">' +
+          U.esc(food.nombre_en || '—') + '</span></div>' +
         '<div class="kv"><span class="k">Equivalencia casera</span><span class="v">' +
           U.esc(food.equiv || '—') + '</span></div>' +
         '<div class="kv"><span class="k">Fuente</span><span class="v" style="white-space:normal;text-align:right">' +
@@ -266,7 +319,7 @@
 
     var textos = (bySec.texto || []);
     textos.forEach(function (c) {
-      var t = food.texto[c.k];
+      var t = food.texto && food.texto[c.k];
       if (!t) return;
       html += '<div class="section"><div class="card-title" style="margin:14px 0 6px">' +
         '<h2>' + U.esc(c.label) + '</h2></div>' +
@@ -297,6 +350,17 @@
   window.Gallery = {
     create: create,
     detail: detail,
-    byId: function (id) { return BY_ID[id] || null; }
+    byId: function (id) {
+      var f = DBX.byId(id);
+      if (f) return f;
+      /* Los reportes guardados con alimentos extendidos siguen abriendo aunque
+         la base activa sea la principal. */
+      if (window.DB_EXT) {
+        for (var i = 0; i < DB_EXT.alimentos.length; i++) {
+          if (DB_EXT.alimentos[i].id === id) return DB_EXT.alimentos[i];
+        }
+      }
+      return null;
+    }
   };
 })();

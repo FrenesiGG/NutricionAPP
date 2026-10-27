@@ -304,9 +304,9 @@
     var circ = 2 * Math.PI * r;
     var sum = (p || 0) + (c || 0) + (f || 0);
     var items = [
-      { name: 'Proteína', v: p || 0, color: '#f43f5e' },
-      { name: 'Carbohidratos', v: c || 0, color: '#3b82f6' },
-      { name: 'Grasas', v: f || 0, color: '#14b8a6' }
+      { key: 'protein', name: 'Proteína', v: p || 0, color: '#f43f5e' },
+      { key: 'carb', name: 'Carbohidratos', v: c || 0, color: '#3b82f6' },
+      { key: 'fat', name: 'Grasas', v: f || 0, color: '#14b8a6' }
     ];
     var s = '<svg class="macro-pie-svg" viewBox="0 0 ' + W + ' ' + H + '" role="img" aria-label="Distribución de macronutrientes">';
     if (sum <= 0) {
@@ -318,7 +318,8 @@
         var frac = it.v / sum, len = frac * circ;
         it.frac = frac;
         it.mid = acc + frac / 2;
-        s += '<circle cx="' + cx + '" cy="' + cy + '" r="' + r + '" fill="none" stroke="' + it.color + '" stroke-width="' + sw +
+        s += '<circle class="mp-arc" data-macro="' + it.key + '" data-pct="' + (frac * 100).toFixed(1) +
+          '" cx="' + cx + '" cy="' + cy + '" r="' + r + '" fill="none" stroke="' + it.color + '" stroke-width="' + sw +
           '" stroke-dasharray="' + len.toFixed(2) + ' ' + (circ - len).toFixed(2) + '" stroke-dashoffset="' + (-acc * circ).toFixed(2) + '"/>';
         acc += frac;
       });
@@ -346,17 +347,80 @@
         var right = it.cos >= 0, dir = right ? 1 : -1;
         var x0 = cx + it.cos * (r + sw / 2 + 1), y0 = cy + it.sin * (r + sw / 2 + 1);
         var lx = cx + dir * (r + sw / 2 + 22);
-        s += '<polyline points="' + x0.toFixed(1) + ',' + y0.toFixed(1) + ' ' + (lx - dir * 4).toFixed(1) + ',' + it.y.toFixed(1) + ' ' + lx.toFixed(1) + ',' + it.y.toFixed(1) +
-          '" fill="none" stroke="' + it.color + '" stroke-width="1" opacity=".75"/>';
         var tx = lx + dir * 5, anc = right ? 'start' : 'end';
-        s += '<text x="' + tx.toFixed(1) + '" y="' + (it.y - 2).toFixed(1) + '" text-anchor="' + anc + '" font-size="11" fill="#cbd5e1">' + it.name + '</text>' +
+        s += '<g class="mp-label" data-macro="' + it.key + '" data-pct="' + (it.frac * 100).toFixed(1) + '">' +
+          '<polyline points="' + x0.toFixed(1) + ',' + y0.toFixed(1) + ' ' + (lx - dir * 4).toFixed(1) + ',' + it.y.toFixed(1) + ' ' + lx.toFixed(1) + ',' + it.y.toFixed(1) +
+          '" fill="none" stroke="' + it.color + '" stroke-width="1" opacity=".75"/>' +
+          '<text x="' + tx.toFixed(1) + '" y="' + (it.y - 2).toFixed(1) + '" text-anchor="' + anc + '" font-size="11" fill="#cbd5e1">' + it.name + '</text>' +
           '<text x="' + tx.toFixed(1) + '" y="' + (it.y + 12).toFixed(1) + '" text-anchor="' + anc + '" font-size="13" font-weight="700" fill="' + it.color + '">' +
-          (it.frac * 100).toFixed(1) + '%</text>';
+          (it.frac * 100).toFixed(1) + '%</text></g>';
       });
     }
     s += '<text x="' + cx + '" y="' + (cy - 1) + '" text-anchor="middle" font-size="18" font-weight="750" fill="#fff">' + U.n(centerVal || 0, 0) + '</text>' +
       '<text x="' + cx + '" y="' + (cy + 12) + '" text-anchor="middle" font-size="7.5" font-weight="600" fill="#94a3b8" letter-spacing="0.03em">' + U.esc(centerSub || '') + '</text></svg>';
     return '<div class="macro-pie-wrap">' + s + '</div>';
+  };
+
+  /**
+   * Activa la burbuja AMDR (IOM/NASEM y WHO/FAO) al pasar el cursor por la dona.
+   * Debe llamarse después de insertar el HTML de U.macroPie en el DOM.
+   */
+  U.bindMacroPie = function (root) {
+    if (!root) return;
+    var tip = document.getElementById('macro-tip');
+    if (!tip) {
+      tip = document.createElement('div');
+      tip.id = 'macro-tip';
+      tip.className = 'macro-tip';
+      tip.setAttribute('role', 'tooltip');
+      document.body.appendChild(tip);
+    }
+
+    var COLORS = { protein: '#f43f5e', carb: '#3b82f6', fat: '#14b8a6' };
+    var NAMES = { protein: 'Proteína', carb: 'Carbohidratos', fat: 'Grasas' };
+
+    function place(e) {
+      var x = e.clientX + 16, y = e.clientY + 16;
+      var w = tip.offsetWidth || 240, h = tip.offsetHeight || 120;
+      if (x + w > window.innerWidth - 10) x = Math.max(10, e.clientX - w - 16);
+      if (y + h > window.innerHeight - 10) y = Math.max(10, e.clientY - h - 16);
+      tip.style.left = x + 'px';
+      tip.style.top = y + 'px';
+    }
+
+    function show(key, pct, e) {
+      var am = (window.N && N.AMDR) ? N.AMDR[key] : null;
+      var color = COLORS[key] || '#5fd98d';
+      var html = '<div class="mt-head"><span class="mt-dot" style="background:' + color + '"></span>' +
+        '<b>' + (NAMES[key] || key) + '</b><span class="mt-pct" style="color:' + color + '">' + pct + ' %</span></div>';
+      if (am) {
+        html += '<div class="mt-row"><span>' + U.esc(am.sourceIom) + '</span><b>' + am.iom[0] + ' – ' + am.iom[1] + ' %</b></div>' +
+          '<div class="mt-row"><span>' + U.esc(am.sourceWho) + '</span><b>' + am.who[0] + ' – ' + am.who[1] + ' %</b></div>';
+        var st, cls;
+        if (pct < am.iom[0]) { st = 'Por debajo del rango de la IOM'; cls = 'low'; }
+        else if (pct > am.iom[1]) { st = 'Por encima del rango de la IOM'; cls = 'over'; }
+        else { st = 'Dentro del rango de la IOM'; cls = 'ok'; }
+        if (pct >= am.who[0] && pct <= am.who[1]) st += ' · también dentro de la OMS/FAO';
+        else st += ' · fuera del rango de la OMS/FAO';
+        html += '<div class="mt-status ' + cls + '">' + st + '</div>';
+      } else {
+        html += '<div class="mt-status none">Rangos AMDR no disponibles.</div>';
+      }
+      tip.innerHTML = html;
+      tip.classList.add('is-on');
+      place(e);
+    }
+
+    function hide() { tip.classList.remove('is-on'); }
+
+    var nodes = root.querySelectorAll('[data-macro]');
+    Array.prototype.forEach.call(nodes, function (el) {
+      el.addEventListener('mouseenter', function (e) {
+        show(el.getAttribute('data-macro'), el.getAttribute('data-pct'), e);
+      });
+      el.addEventListener('mousemove', place);
+      el.addEventListener('mouseleave', hide);
+    });
   };
 
   /* ------------------------------------------- proyección de peso (v1.7) */
@@ -371,6 +435,16 @@
     { d: 365 / 12 * 4, label: '4 meses' },
     { d: 365 / 12 * 6, label: '6 meses' },
     { d: 365,          label: '1 año' }
+  ];
+
+  /* En escala lineal los puntos de 1–2 semanas quedarían amontonados a la izquierda. */
+  var WP_TICKS_LINEAR = [
+    { d: 0 },
+    { d: 365 / 12 },
+    { d: 365 / 12 * 3 },
+    { d: 365 / 12 * 6 },
+    { d: 365 / 12 * 9 },
+    { d: 365 }
   ];
 
   function wpTrim(v, dec) {
@@ -392,12 +466,12 @@
       return useKcal ? manualKcal : defaultKcal;
     }
     /* serie diaria 0..365: entre días enteros la curva es lineal, así que interpolar es exacto */
-    var dense = [{ d: 0, kg: p.peso }];
+    var dense = [{ d: 0, kg: p.peso, tdee: tdee }];
     for (var day = 0; day < 365; day++) {
       var blk = Math.floor(day / 7);
       if (blk !== block) { block = blk; tdee = N.calc(p).tdee; }
       p.peso = Math.max(25, Math.min(300, p.peso + (intake() - tdee) / 7700));
-      dense.push({ d: day + 1, kg: p.peso });
+      dense.push({ d: day + 1, kg: p.peso, tdee: tdee });
     }
     return dense;
   }
@@ -412,6 +486,7 @@
     var st = cfg.state, modes = cfg.modes || ['initial'];
     if (modes.indexOf(st.mode) < 0) st.mode = modes[0];
     if (st.zero == null) st.zero = true;
+    if (st.scale !== 'linear') st.scale = 'log';
     var mode = st.mode;
     var objF = N.obj(cfg.person.objetivo).f;
     var defKcal = Math.round(cfg.defaultKcal);
@@ -421,14 +496,18 @@
       ? '<div class="seg" id="wp-mode"><button type="button" data-mode="initial" class="' + (mode === 'initial' ? 'is-on' : '') + '">Meta calórica inicial</button>' +
         '<button type="button" data-mode="percent" class="' + (mode === 'percent' ? 'is-on' : '') + '">% de objetivo calórico</button></div>'
       : '';
+    var scaleSeg = '<div class="seg wp-scale" id="wp-scale" role="group" aria-label="Escala del eje X">' +
+      '<button type="button" data-scale="log" class="' + (st.scale === 'log' ? 'is-on' : '') + '" title="Escala logarítmica: da más espacio a las primeras semanas">Log</button>' +
+      '<button type="button" data-scale="linear" class="' + (st.scale === 'linear' ? 'is-on' : '') + '" title="Escala lineal: tiempo proporcional">Lineal</button></div>';
     var manualVal = mode === 'initial' ? st.manualKcal : st.manualPct;
     var manual = '<label class="wp-manual"><span>' + (mode === 'initial' ? 'Meta calórica manual' : '% de objetivo calórico manual') + '</span>' +
       '<span class="input-suffix"><input id="wp-manual" class="input" type="number" min="0" step="' + (mode === 'initial' ? 10 : 1) + '" inputmode="decimal" ' +
       'placeholder="' + (mode === 'initial' ? defKcal : U.n(defPct, 1)) + '" value="' + (manualVal > 0 ? U.esc(manualVal) : '') + '">' +
       '<span>' + (mode === 'initial' ? 'kcal' : '%') + '</span></span></label>';
 
-    host.innerHTML = '<div class="card-title"><h2>' + U.esc(cfg.title || 'Proyección de peso') + '</h2><span class="hint">' + U.esc(cfg.hint || '1 año · eje X logarítmico') + '</span></div>' +
-      '<div class="weight-chart-controls">' + segs +
+    host.innerHTML = '<div class="card-title"><h2>' + U.esc(cfg.title || 'Proyección de peso') + '</h2><span class="hint" id="wp-hint">' +
+      U.esc(cfg.hint || ('1 año · eje X ' + (st.scale === 'linear' ? 'lineal' : 'logarítmico'))) + '</span></div>' +
+      '<div class="weight-chart-controls">' + segs + scaleSeg +
       '<button class="btn-help-icon" type="button" id="wp-help" title="Cómo funciona la proyección">?</button>' + manual +
       '<label class="weight-zero-toggle"><input type="checkbox" id="wp-zero" ' + (st.zero ? 'checked' : '') + '> Eje Y desde 0</label></div>' +
       (cfg.note ? '<p class="note" style="margin:0 0 6px">' + cfg.note + '</p>' : '') +
@@ -440,7 +519,10 @@
 
     function draw() {
       var dense = wpSimulate(cfg.person, st, mode, defKcal);
-      var pts = [{ d: 0, kg: dense[0].kg }].concat(WP_TICKS.map(function (t) { return { d: t.d, kg: wpAt(dense, t.d) }; }));
+      var tickDefs = st.scale === 'linear' ? WP_TICKS_LINEAR : [{ d: 0 }].concat(WP_TICKS);
+      var pts = tickDefs.map(function (t) { return { d: t.d, kg: wpAt(dense, t.d) }; });
+      var hintEl = host.querySelector('#wp-hint');
+      if (hintEl) hintEl.textContent = '1 año · eje X ' + (st.scale === 'linear' ? 'lineal' : 'logarítmico');
       var W = 760, H = 330, L = 58, R = 66, T = 32, B = 70;
       var y0 = H - B, y1 = y0 + 26;
       var ws = dense.map(function (a) { return a.kg; });
@@ -448,7 +530,11 @@
       var maxW = Math.ceil(Math.max.apply(null, ws) + 2);
       if (maxW <= minW) maxW = minW + 1;
       var span = maxW - minW, ydec = span < 6 ? 1 : 0;
-      function x(d) { return L + Math.log(d + 1) / Math.log(366) * (W - L - R); }
+      function x(d) {
+        return st.scale === 'linear'
+          ? L + (d / 365) * (W - L - R)
+          : L + Math.log(d + 1) / Math.log(366) * (W - L - R);
+      }
       function y(v) { return T + (maxW - v) / span * (y0 - T); }
       var g = '';
       for (var gy = 0; gy <= 4; gy++) {
@@ -460,11 +546,11 @@
       g += '<line x1="' + L + '" y1="' + T + '" x2="' + L + '" y2="' + y0 + '" stroke="#3a4a60"/>';
       g += '<line x1="' + L + '" y1="' + y0 + '" x2="' + (W - R + 10) + '" y2="' + y0 + '" stroke="#3a4a60"/>' +
         '<line x1="' + L + '" y1="' + y1 + '" x2="' + (W - R + 10) + '" y2="' + y1 + '" stroke="#3a4a60"/>';
-      var ticks = [{ d: 0, wk: 'Hoy', mo: 'Hoy' }].concat(WP_TICKS.map(function (t) {
-        return { d: t.d, wk: wpTrim(t.d / 7, 1), mo: wpTrim(t.d / (365 / 12), 1) };
-      }));
+      var ticks = tickDefs.map(function (t) {
+        return { d: t.d, wk: t.d === 0 ? 'Hoy' : wpTrim(t.d / 7, 1), mo: t.d === 0 ? 'Hoy' : wpTrim(t.d / (365 / 12), 1) };
+      });
       ticks.forEach(function (t, i) {
-        var xx = x(t.d), bw = t.d === 0 ? 30 : 36;
+        var xx = x(t.d), bw = t.d === 0 ? 30 : 40;
         g += '<line x1="' + xx + '" y1="' + T + '" x2="' + xx + '" y2="' + y1 + '" stroke="#1d2734"/>' +
           '<rect class="wp-hl-bg" data-i="' + i + '" x="' + (xx - bw / 2) + '" y="' + (y0 + 4) + '" width="' + bw + '" height="15" rx="4"/>' +
           '<text class="wp-tick" data-i="' + i + '" x="' + xx + '" y="' + (y0 + 15) + '" text-anchor="middle">' + t.wk + '</text>' +
@@ -485,9 +571,11 @@
         '<circle id="wp-hdot" r="6.5"/>' +
         '</g>';
       body.innerHTML = '<svg class="weight-chart-svg" viewBox="0 0 ' + W + ' ' + H + '" role="img" aria-label="Proyección de peso">' + g +
-        '<path d="' + path + '" fill="none" stroke="#5fd98d" stroke-width="2.5" stroke-linejoin="round"/>' + dots + hl + '</svg>';
+        '<path d="' + path + '" fill="none" stroke="#5fd98d" stroke-width="2.5" stroke-linejoin="round"/>' + dots + hl + '</svg>' +
+        '<div class="wp-tip" id="wp-tip" role="status"></div>';
 
       var svg = body.querySelector('svg');
+      var tipEl = body.querySelector('#wp-tip');
       function show(d, tickI) {
         var kg = wpAt(dense, d), px = x(d), py = y(kg);
         svg.querySelectorAll('.is-hl').forEach(function (e) { e.classList.remove('is-hl'); });
@@ -505,6 +593,28 @@
         q('#wp-xm-bg').setAttribute('x', px - 22); q('#wp-xm').setAttribute('x', px); q('#wp-xm').textContent = mo;
         q('#wp-hdot').setAttribute('cx', px); q('#wp-hdot').setAttribute('cy', py);
         q('#wp-hdot').setAttribute('class', tickI >= 0 ? '' : 'is-new');
+
+        if (tipEl) {
+          var idx = Math.max(0, Math.min(365, Math.round(d)));
+          var td = dense[idx].tdee;
+          tipEl.innerHTML =
+            '<div class="wt-head">Punto exacto</div>' +
+            '<div class="wt-row"><span>Peso</span><b>' + kg.toFixed(2) + ' kg</b></div>' +
+            '<div class="wt-row"><span>Semana</span><b>' + wk + '</b></div>' +
+            '<div class="wt-row"><span>Mes</span><b>' + mo + '</b></div>' +
+            '<div class="wt-row"><span>TDEE</span><b>' + U.n(td, 0) + ' kcal/día</b></div>';
+          var rc = svg.getBoundingClientRect();
+          var bx = rc.width ? (px / W) * rc.width : px;
+          var by = rc.height ? (py / H) * rc.height : py;
+          var tw = tipEl.offsetWidth || 160, th = tipEl.offsetHeight || 110;
+          var left = bx + 16;
+          if (left + tw > (rc.width || W) - 4) left = bx - tw - 16;
+          var top = by - th - 12;
+          if (top < 4) top = by + 16;
+          tipEl.style.left = Math.max(4, left) + 'px';
+          tipEl.style.top = Math.max(4, top) + 'px';
+          tipEl.classList.add('is-on');
+        }
       }
       /* punto más cercano de la línea (con interpolación entre muestras diarias) */
       svg.onmousemove = function (e) {
@@ -538,11 +648,19 @@
       svg.onmouseleave = function () {
         svg.querySelector('#wp-hl').setAttribute('visibility', 'hidden');
         svg.querySelectorAll('.is-hl').forEach(function (e) { e.classList.remove('is-hl'); });
+        if (tipEl) tipEl.classList.remove('is-on');
       };
     }
 
     host.querySelectorAll('[data-mode]').forEach(function (b) {
       b.onclick = function () { st.mode = b.getAttribute('data-mode'); U.weightProjection(host, cfg); };
+    });
+    host.querySelectorAll('[data-scale]').forEach(function (b) {
+      b.onclick = function () {
+        st.scale = b.getAttribute('data-scale');
+        host.querySelectorAll('[data-scale]').forEach(function (x) { x.classList.toggle('is-on', x === b); });
+        draw();
+      };
     });
     zeroEl.onchange = function () { st.zero = this.checked; draw(); };
     inp.oninput = function () {
@@ -555,7 +673,9 @@
         '<p><b>Meta calórica inicial:</b> mantiene fija la ingesta diaria; cada semana se estima el cambio de peso con el balance energético y se recalcula el TDEE con el peso nuevo.</p>' +
         (modes.length > 1 ? '<p><b>% de objetivo calórico:</b> la ingesta es cada semana ese porcentaje del TDEE actualizado (85 % en déficit moderado, 110 % en superávit…).</p>' : '') +
         '<p><b>Campo manual:</b> escribe tu propia meta (kcal) o tu propio % para sustituir el valor predeterminado, que se muestra en gris. Vacío o 0 = sin valor manual.</p>' +
-        '<p>Simulación aproximada: 7,700 kcal por kg, sin adaptaciones metabólicas ni cambios de composición corporal. El eje X es logarítmico y los puntos están en 1 y 2 semanas y 1, 2, 3, 4, 6 y 12 meses.</p>' });
+        '<p><b>Escala del eje X:</b> <i>Log</i> reparte mejor las primeras semanas y los primeros meses; <i>Lineal</i> usa tiempo proporcional durante todo el año.</p>' +
+        '<p><b>Burbuja al pasar el cursor:</b> muestra el peso, la semana, el mes y el TDEE exactos del punto señalado.</p>' +
+        '<p>Simulación aproximada: 7,700 kcal por kg, sin adaptaciones metabólicas ni cambios de composición corporal.</p>' });
     };
     draw();
   };
